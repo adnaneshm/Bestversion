@@ -11,7 +11,6 @@ type Draft = {
   phone?: string;
   address?: string;
   tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
-  medical?: { blood?: string; weight?: string; height?: string; allergies?: string; notes?: string };
 };
 
 function generateId() {
@@ -37,7 +36,7 @@ export default function Register() {
     if (step === 1) {
       if (!draft.prenom || !draft.nom || !draft.password) return setError("Veuillez remplir les champs d'identifiants");
     }
-    setStep((s) => Math.min(4, s + 1));
+    setStep((s) => Math.min(3, s + 1));
   }
 
   function prev() {
@@ -48,8 +47,10 @@ export default function Register() {
   function finish() {
     // final validation, save to localStorage
     if (!draft.id || !draft.prenom || !draft.nom) return setError("Informations incomplètes");
+    // remove medical data (we don't store any)
+    const toSave = { id: draft.id, prenom: draft.prenom, nom: draft.nom, password: draft.password, dob: draft.dob, phone: draft.phone, address: draft.address, tutor: draft.tutor };
     const users = JSON.parse(localStorage.getItem("shm_users") || "{}");
-    users[draft.id] = { ...draft };
+    users[draft.id] = toSave;
     localStorage.setItem("shm_users", JSON.stringify(users));
     alert("Compte créé — données enregistrées localement (demo)");
     window.location.href = "/";
