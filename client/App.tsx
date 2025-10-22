@@ -25,6 +25,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/connexion" element={<Login />} />
           <Route path="/creer-un-compte" element={<Register />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
