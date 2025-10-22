@@ -5,6 +5,7 @@ const groups = [
   { label: "A", title: "أشبال", color: "bg-sky-300 text-slate-900" },
   { label: "B", title: "زهـرات", color: "bg-sky-200 text-slate-900" },
   { label: "C", title: "كشاف", color: "bg-slate-800 text-white" },
+  { label: "D", title: "مرشدات", color: "bg-violet-500 text-white" },
   { label: "E", title: "كشاف متقدم", color: "bg-red-600 text-white" },
   { label: "F", title: "رائدات", color: "bg-red-400 text-white" },
   { label: "G", title: "جوالة", color: "bg-amber-200 text-slate-900" },
