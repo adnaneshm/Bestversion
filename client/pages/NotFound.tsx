@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import MainLayout from "@/components/layout/MainLayout";
 
 const NotFound = () => {
   const location = useLocation();
