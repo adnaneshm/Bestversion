@@ -17,7 +17,7 @@ export default function Index() {
               title="Membre"
               desc="Accès aux ressources et activités du scoutisme"
               cta="Continuer en tant que Membre"
-              href="/connexion"
+              href="/categories"
               gradient="from-blue-500 to-blue-600"
             />
             <RoleCard
