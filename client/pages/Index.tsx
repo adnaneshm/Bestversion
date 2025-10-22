@@ -28,14 +28,6 @@ export default function Index() {
               href="/connexion"
               gradient="from-slate-700 to-slate-800"
             />
-            <RoleCard
-              emoji="📋"
-              title="Corps Administratif"
-              desc="Accès complet à la gestion et aux outils administratifs"
-              cta="Continuer en tant qu'Administrateur"
-              href="/connexion"
-              gradient="from-violet-500 to-violet-600"
-            />
           </div>
 
           <div className="text-center text-sm text-slate-600 mt-8">
