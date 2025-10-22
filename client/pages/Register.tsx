@@ -126,32 +126,12 @@ export default function Register() {
             </div>
           )}
 
-          {step === 4 && (
-            <div>
-              <h3 className="font-semibold text-lg mb-3">Données médicales et optionnelles</h3>
-              <div className="grid gap-3">
-                <div className="grid grid-cols-3 gap-2">
-                  <select className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ medical: { ...(draft.medical || {}), blood: e.target.value } })}>
-                    <option>Groupe sanguin</option>
-                    <option>A+</option>
-                    <option>B+</option>
-                    <option>O+</option>
-                  </select>
-                  <input placeholder="Poids (kg)" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ medical: { ...(draft.medical || {}), weight: e.target.value } })} />
-                  <input placeholder="Taille (cm)" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ medical: { ...(draft.medical || {}), height: e.target.value } })} />
-                </div>
-                <textarea placeholder="Allergies" className="h-24 rounded-md border border-slate-200 bg-white px-3 p-2" onChange={(e) => update({ medical: { ...(draft.medical || {}), allergies: e.target.value } })} />
-                <textarea placeholder="Antécédents médicaux" className="h-24 rounded-md border border-slate-200 bg-white px-3 p-2" onChange={(e) => update({ medical: { ...(draft.medical || {}), notes: e.target.value } })} />
-              </div>
-            </div>
-          )}
-
           <div className="flex items-center justify-between gap-4 pt-4">
             <a href="/connexion" className="text-slate-600 hover:text-slate-900">Déjà un compte? Se connecter</a>
             <div className="flex items-center gap-3">
               {step > 1 && <Button variant="outline" onClick={prev}>Précédent</Button>}
-              {step < 4 && <Button onClick={next} className="bg-violet-600 hover:bg-violet-700">Suivant</Button>}
-              {step === 4 && <Button onClick={finish} className="bg-violet-600 hover:bg-violet-700">Créer mon compte</Button>}
+              {step < 3 && <Button onClick={next} className="bg-violet-600 hover:bg-violet-700">Suivant</Button>}
+              {step === 3 && <Button onClick={finish} className="bg-violet-600 hover:bg-violet-700">Créer mon compte</Button>}
             </div>
           </div>
         </div>
