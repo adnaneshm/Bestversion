@@ -3,38 +3,30 @@ import { NavLink } from "react-router-dom";
 import {
   Sidebar,
   SidebarProvider,
+  SidebarInset,
   SidebarHeader,
   SidebarContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { User, useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 import { User as UserIcon, Calendar, Music, Book, Play, FileText, ShoppingCart, Lightbulb } from "lucide-react";
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
 
   return (
-    <div dir="rtl" className="min-h-screen flex bg-[#F9F4E8] text-[#1E392A]">
-      {/* Main content (left) */}
-      <main className="flex-1 p-6 md:p-10">
-        <div className="max-w-6xl mx-auto">{children}</div>
-      </main>
-
-      {/* Sidebar (fixed to right) */}
-      <SidebarProvider>
-        <Sidebar
-          side="right"
-          collapsible="none"
-          variant="sidebar"
-          className="bg-[#6B3FA0] text-[#F9F4E8]"
-          style={{
-            // ensure exact width
-            //@ts-ignore
-            "--sidebar-width": "240px",
-          } as React.CSSProperties}
-        >
+    <SidebarProvider
+      style={{
+        // set the desired sidebar width in the provider so the layout classes work
+        // @ts-ignore
+        "--sidebar-width": "240px",
+      }}
+    >
+      <div dir="rtl" className="min-h-screen flex bg-[#F9F4E8] text-[#1E392A]">
+        {/* Sidebar (right) */}
+        <Sidebar side="right" collapsible="none" variant="sidebar" className="bg-[#6B3FA0] text-[#F9F4E8]">
           <SidebarHeader className="pt-4 px-3 text-right">
             <div className="flex items-center gap-2 justify-end">
               <div className="h-10 w-10 rounded-full bg-white text-[#6B3FA0] grid place-items-center font-bold">SH</div>
@@ -44,6 +36,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
               </div>
             </div>
           </SidebarHeader>
+
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -113,7 +106,12 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>
-      </SidebarProvider>
-    </div>
+
+        {/* Main content using SidebarInset so the sidebar layout/padding works */}
+        <SidebarInset className="flex-1 p-6 md:p-10 bg-[#F9F4E8]">
+          <div className="max-w-6xl mx-auto">{children}</div>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }
