@@ -16,12 +16,30 @@ import { User as UserIcon, Calendar, Music, Book, Play, FileText, ShoppingCart, 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
 
+  // small inner toggle uses useSidebar and must be rendered inside the provider
+  function InnerSidebarToggle() {
+    // lazy import hook to avoid hooks usage before provider
+    // @ts-ignore
+    const { useSidebar } = require("@/components/ui/sidebar");
+    const { toggleSidebar, state } = useSidebar();
+    const collapsed = state === "collapsed";
+    return (
+      <button onClick={toggleSidebar} aria-label="Toggle sidebar" className="h-8 w-8 rounded-full bg-white text-[#6B3FA0] grid place-items-center text-sm">
+        {/* when collapsed show logo small, else show X */}
+        {collapsed ? <span style={{ fontSize: 12 }}>SH</span> : <span style={{ fontSize: 12 }}>✕</span>}
+      </button>
+    );
+  }
+
   return (
     <SidebarProvider
       style={{
         // set the desired sidebar width in the provider so the layout classes work
         // @ts-ignore
         "--sidebar-width": "240px",
+        // contracted icon width
+        // @ts-ignore
+        "--sidebar-width-icon": "30px",
       }}
     >
       <div dir="rtl" className="min-h-screen flex bg-[#F9F4E8] text-[#1E392A]">
