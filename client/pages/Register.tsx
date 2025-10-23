@@ -170,8 +170,11 @@ export default function Register() {
                   <input placeholder="Prénom" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), prenom: e.target.value } })} />
                   <input placeholder="Nom" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), nom: e.target.value } })} />
                 </div>
-                <input placeholder="CIN" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cin: e.target.value } })} />
-                <input placeholder="Téléphone" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
+                <div className="grid grid-cols-2 gap-2">
+                  <input placeholder="CIN (lettres)" className="h-11 rounded-md border border-slate-200 bg-white px-3" maxLength={2} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinLetters: e.target.value } })} />
+                  <input placeholder="CIN (chiffres)" className="h-11 rounded-md border border-slate-200 bg-white px-3" inputMode="numeric" pattern="[0-9]*" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinDigits: e.target.value } })} />
+                </div>
+                <input placeholder="Téléphone" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
               </div>
             </div>
           )}
