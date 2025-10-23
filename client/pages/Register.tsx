@@ -69,25 +69,17 @@ export default function Register() {
         body: JSON.stringify(payload),
       });
 
-      // Read body only once. Prefer JSON parse, fallback to text.
+      // Read text once and try to parse JSON from it
+      const raw = await resp.text();
       let parsed: any = null;
       try {
-        parsed = await resp.json();
+        parsed = JSON.parse(raw);
       } catch (e) {
-        // Response wasn't JSON; try text
-        const txt = await resp.text();
-        if (!resp.ok) {
-          setError(`Erreur serveur: ${txt}`);
-          return;
-        }
-        // success but no JSON body
-        alert("Compte créé avec succès");
-        window.location.href = "/";
-        return;
+        parsed = null;
       }
 
       if (!resp.ok) {
-        const msg = parsed?.detail || parsed?.error || JSON.stringify(parsed);
+        const msg = (parsed && (parsed.detail || parsed.error)) || raw || `HTTP ${resp.status}`;
         setError(`Erreur serveur: ${msg}`);
         return;
       }
