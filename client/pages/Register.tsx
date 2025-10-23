@@ -52,6 +52,17 @@ export default function Register() {
       const params = new URLSearchParams(window.location.search);
       const category = params.get("category") || undefined;
 
+      // assemble tutor cin if split
+      const tutor = draft.tutor ? { ...draft.tutor } : undefined;
+      if (tutor) {
+        const letters = (tutor as any).cinLetters || "";
+        const digits = (tutor as any).cinDigits || "";
+        (tutor as any).cin = letters + digits;
+        // clean helper props
+        delete (tutor as any).cinLetters;
+        delete (tutor as any).cinDigits;
+      }
+
       const payload = {
         id: draft.id,
         prenom: draft.prenom,
@@ -61,6 +72,7 @@ export default function Register() {
         phone: draft.phone || null,
         address: draft.address || null,
         category,
+        tutor,
       };
 
       const resp = await fetch("/api/register", {
