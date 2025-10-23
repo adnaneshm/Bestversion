@@ -12,7 +12,10 @@ export const handleRegister: RequestHandler = async (req, res) => {
   try {
     const supabaseUrl = process.env.SUPABASE_URL;
     const serviceRole = process.env.SUPABASE_SERVICE_ROLE;
+    // Debug: log presence (do not log secrets)
+    console.log("SUPABASE_URL set:", !!supabaseUrl, "SUPABASE_SERVICE_ROLE set:", !!serviceRole);
     if (!supabaseUrl || !serviceRole) {
+      console.error("Supabase configuration missing. SUPABASE_URL or SUPABASE_SERVICE_ROLE is not set.");
       return res.status(500).json({ error: "Supabase configuration missing on server." });
     }
 
