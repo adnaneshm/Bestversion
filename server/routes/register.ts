@@ -81,6 +81,8 @@ export const handleRegister: RequestHandler = async (req, res) => {
       dob: dob || null,
       phone: phone || null,
       address: address || null,
+      role: role || null,
+      niche_id: niche_id || null,
       tutor_id: tutor_id,
       created_at: new Date().toISOString(),
     };
