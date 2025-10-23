@@ -69,13 +69,29 @@ export default function Register() {
         body: JSON.stringify(payload),
       });
 
-      if (!resp.ok) {
-        const text = await resp.text();
-        setError(`Erreur serveur: ${text}`);
+      // Read body only once. Prefer JSON parse, fallback to text.
+      let parsed: any = null;
+      try {
+        parsed = await resp.json();
+      } catch (e) {
+        // Response wasn't JSON; try text
+        const txt = await resp.text();
+        if (!resp.ok) {
+          setError(`Erreur serveur: ${txt}`);
+          return;
+        }
+        // success but no JSON body
+        alert("Compte créé avec succès");
+        window.location.href = "/";
         return;
       }
 
-      const data = await resp.json();
+      if (!resp.ok) {
+        const msg = parsed?.detail || parsed?.error || JSON.stringify(parsed);
+        setError(`Erreur serveur: ${msg}`);
+        return;
+      }
+
       // success
       alert("Compte créé avec succès");
       window.location.href = "/";
