@@ -44,16 +44,44 @@ export default function Register() {
     setStep((s) => Math.max(1, s - 1));
   }
 
-  function finish() {
-    // final validation, save to localStorage
-    if (!draft.id || !draft.prenom || !draft.nom) return setError("Informations incomplètes");
-    // remove medical data (we don't store any)
-    const toSave = { id: draft.id, prenom: draft.prenom, nom: draft.nom, password: draft.password, dob: draft.dob, phone: draft.phone, address: draft.address, tutor: draft.tutor };
-    const users = JSON.parse(localStorage.getItem("shm_users") || "{}");
-    users[draft.id] = toSave;
-    localStorage.setItem("shm_users", JSON.stringify(users));
-    alert("Compte créé — données enregistrées localement (demo)");
-    window.location.href = "/";
+  async function finish() {
+    if (!draft.id || !draft.prenom || !draft.nom || !draft.password) return setError("Informations incomplètes");
+
+    setError(null);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get("category") || undefined;
+
+      const payload = {
+        id: draft.id,
+        prenom: draft.prenom,
+        nom: draft.nom,
+        password: draft.password,
+        dob: draft.dob || null,
+        phone: draft.phone || null,
+        address: draft.address || null,
+        category,
+      };
+
+      const resp = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!resp.ok) {
+        const text = await resp.text();
+        setError(`Erreur serveur: ${text}`);
+        return;
+      }
+
+      const data = await resp.json();
+      // success
+      alert("Compte créé avec succès");
+      window.location.href = "/";
+    } catch (err: any) {
+      setError(err?.message || "Erreur réseau");
+    }
   }
 
   return (
