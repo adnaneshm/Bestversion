@@ -30,5 +30,10 @@ export function createServer() {
     return handleIdee(req, res, next);
   });
 
+  app.get("/api/score", (req, res, next) => {
+    const { handleScore } = require("./routes/score");
+    return handleScore(req, res, next);
+  });
+
   return app;
 }
