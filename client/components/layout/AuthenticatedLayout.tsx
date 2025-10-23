@@ -37,6 +37,11 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
             </div>
           </SidebarHeader>
 
+          {/* small toggle logo when collapsed */}
+          <SidebarHeader className="pt-2 px-2 text-right">
+            <InnerSidebarToggle />
+          </SidebarHeader>
+
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
