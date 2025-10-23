@@ -73,6 +73,8 @@ export default function Register() {
         dob: draft.dob || null,
         phone: draft.phone || null,
         address: draft.address || null,
+        role: (draft as any).role || null,
+        niche_id: (draft as any).niche_id || null,
         category,
         tutor,
       };
