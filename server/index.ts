@@ -24,6 +24,11 @@ export function createServer() {
   app.post("/api/register", handleRegister);
   app.get("/api/debug/supabase", handleDebug);
   app.post("/api/login", handleLogin);
+  app.post("/api/idees", (req, res, next) => {
+    // lazy import to avoid circular issues
+    const { handleIdee } = require("./routes/idees");
+    return handleIdee(req, res, next);
+  });
 
   return app;
 }
