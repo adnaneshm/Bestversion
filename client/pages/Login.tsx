@@ -4,6 +4,46 @@ import { useState } from "react";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    const form = e.target as HTMLFormElement;
+    const data = new FormData(form);
+    const id = String(data.get("id") || "").trim();
+    const password = String(data.get("password") || "").trim();
+
+    try {
+      const resp = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, password }),
+      });
+
+      const txt = await resp.text();
+      let parsed: any = null;
+      try {
+        parsed = JSON.parse(txt);
+      } catch (e) {
+        parsed = null;
+      }
+
+      if (!resp.ok) {
+        setError((parsed && (parsed.error || parsed.detail)) || txt || `HTTP ${resp.status}`);
+        setLoading(false);
+        return;
+      }
+
+      // success
+      window.location.href = "/compte";
+    } catch (err: any) {
+      setError(err?.message || "Network error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <MainLayout>
@@ -14,14 +54,9 @@ export default function Login() {
             <p className="text-slate-600 mt-1">Accédez à votre espace SHM Portal</p>
           </div>
 
-          <form
-            className="grid gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setLoading(true);
-              setTimeout(() => setLoading(false), 900);
-            }}
-          >
+          {error && <div className="mb-3 text-sm text-red-600">{error}</div>}
+
+          <form className="grid gap-4" onSubmit={submit}>
             <div className="grid gap-2">
               <label htmlFor="id" className="text-sm font-medium text-slate-700">ID (ex: E0001)</label>
               <input id="id" name="id" required className="h-11 rounded-md border border-slate-200 bg-amber-50/60 px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
@@ -38,7 +73,7 @@ export default function Login() {
             </div>
             <div className="grid gap-2">
               <label htmlFor="password" className="text-sm font-medium text-slate-700">Mot de passe</label>
-              <input id="password" type="password" required className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
+              <input id="password" name="password" type="password" required className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
             </div>
             <Button className="mt-2 bg-violet-600 hover:bg-violet-700" disabled={loading}>
               {loading ? "Connexion…" : "Se connecter"}
