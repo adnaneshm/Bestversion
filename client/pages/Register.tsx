@@ -20,7 +20,7 @@ function generateId() {
 
 export default function Register() {
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft>({ id: generateId(), prenom: "", nom: "", password: "", dob: "" });
+  const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", role: "member", niche_id: "default" });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
