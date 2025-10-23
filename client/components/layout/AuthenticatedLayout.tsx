@@ -23,95 +23,97 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
       </main>
 
       {/* Sidebar (fixed to right) */}
-      <Sidebar
-        side="right"
-        collapsible="none"
-        variant="sidebar"
-        className="bg-[#6B3FA0] text-[#F9F4E8]"
-        style={{
-          // ensure exact width
-          //@ts-ignore
-          "--sidebar-width": "240px",
-        } as React.CSSProperties}
-      >
-        <SidebarHeader className="pt-4 px-3 text-right">
-          <div className="flex items-center gap-2 justify-end">
-            <div className="h-10 w-10 rounded-full bg-white text-[#6B3FA0] grid place-items-center font-bold">SH</div>
-            <div className="text-right">
-              <p className="text-sm font-semibold">Scoutisme Hassania</p>
-              <p className="text-xs opacity-90">SHM Portal</p>
+      <SidebarProvider>
+        <Sidebar
+          side="right"
+          collapsible="none"
+          variant="sidebar"
+          className="bg-[#6B3FA0] text-[#F9F4E8]"
+          style={{
+            // ensure exact width
+            //@ts-ignore
+            "--sidebar-width": "240px",
+          } as React.CSSProperties}
+        >
+          <SidebarHeader className="pt-4 px-3 text-right">
+            <div className="flex items-center gap-2 justify-end">
+              <div className="h-10 w-10 rounded-full bg-white text-[#6B3FA0] grid place-items-center font-bold">SH</div>
+              <div className="text-right">
+                <p className="text-sm font-semibold">Scoutisme Hassania</p>
+                <p className="text-xs opacity-90">SHM Portal</p>
+              </div>
             </div>
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/compte" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><UserIcon /> <span>Mon Espace Compte</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/compte" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><UserIcon /> <span>Mon Espace Compte</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/programme" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><Calendar /> <span>Programme</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/programme" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><Calendar /> <span>Programme</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/anachid" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><Music /> <span>Anachid</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/anachid" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><Music /> <span>Anachid</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/frida" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><Book /> <span>Founoun Arriyada</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/frida" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><Book /> <span>Founoun Arriyada</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/audio-tracks" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><Play /> <span>Firqa Nohassia</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/audio-tracks" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><Play /> <span>Firqa Nohassia</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/rapports" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><FileText /> <span>Rapports de Séance</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/rapports" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><FileText /> <span>Rapports de Séance</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/marketplace" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><ShoppingCart /> <span>Marketplace</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/marketplace" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><ShoppingCart /> <span>Marketplace</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/idees" className="flex items-center justify-between w-full">
-                  <span className="flex items-center gap-3 justify-end"><Lightbulb /> <span>صندوق الأفكار</span></span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/idees" className="flex items-center justify-between w-full">
+                    <span className="flex items-center gap-3 justify-end"><Lightbulb /> <span>صندوق الأفكار</span></span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-          </SidebarMenu>
-        </SidebarContent>
-      </Sidebar>
+            </SidebarMenu>
+          </SidebarContent>
+        </Sidebar>
+      </SidebarProvider>
     </div>
   );
 }
