@@ -13,6 +13,17 @@ import Register from "./pages/Register";
 import Categories from "./pages/Categories";
 import ResetPassword from "./pages/ResetPassword";
 
+// Authenticated pages
+import Compte from "./pages/Compte";
+import Programme from "./pages/Programme";
+import Anachid from "./pages/Anachid";
+import Frida from "./pages/Frida";
+import AudioTracks from "./pages/AudioTracks";
+import Rapports from "./pages/Rapports";
+import Marketplace from "./pages/Marketplace";
+import Idees from "./pages/Idees";
+import Membres from "./pages/Membres";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -27,6 +38,18 @@ const App = () => (
           <Route path="/creer-un-compte" element={<Register />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Authenticated area */}
+          <Route path="/compte" element={<Compte />} />
+          <Route path="/programme" element={<Programme />} />
+          <Route path="/anachid" element={<Anachid />} />
+          <Route path="/frida" element={<Frida />} />
+          <Route path="/audio-tracks" element={<AudioTracks />} />
+          <Route path="/rapports" element={<Rapports />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/idees" element={<Idees />} />
+          <Route path="/membres" element={<Membres />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
