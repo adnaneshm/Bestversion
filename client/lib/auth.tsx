@@ -10,20 +10,31 @@ export type User = {
 };
 
 // Seed a default current user for the authenticated area.
-export const currentUser: User = {
+function computeAge(dob?: string) {
+  if (!dob) return undefined;
+  const birth = new Date(dob);
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const m = now.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+  return age;
+}
+
+export const currentUser: User & { dob?: string } = {
   id: "1",
-  external_code: "E0001",
+  external_code: "CA3144",
   name: "Adnane Belkhadir",
   role: "e0001",
   niche_id: "default",
   monthly_score: 82,
-  age: 28,
+  dob: "1996-11-02",
+  age: computeAge("1996-11-02"),
   permissions: ["create_eval_report"],
 };
 
 export function useAuth() {
   // lightweight hook - in a real app this would come from context and async fetch
-  const user = currentUser;
+  const user = currentUser as any;
 
   function hasPermission(name: string) {
     return !!(user.permissions || []).includes(name) || user.role === name || user.external_code === name;
