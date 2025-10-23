@@ -28,7 +28,8 @@ export const handleRegister: RequestHandler = async (req, res) => {
       phone,
       address,
       category, // optional category code, e.g. 'C' or 'D'
-      role // optional role: 'membre' | 'chef'
+      role, // optional role code string
+      niche_id // optional niche id
     } = req.body as Record<string, any>;
 
     if (!id || !prenom || !nom || !password) {
