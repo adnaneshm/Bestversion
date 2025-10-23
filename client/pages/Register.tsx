@@ -10,6 +10,8 @@ type Draft = {
   dob: string;
   phone?: string;
   address?: string;
+  role?: string;
+  niche_id?: string;
   tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
 };
 
