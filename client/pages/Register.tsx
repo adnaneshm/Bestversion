@@ -130,6 +130,25 @@ export default function Register() {
                 <label className="text-sm font-medium text-slate-700">Nom</label>
                 <input value={draft.nom} onChange={(e) => update({ nom: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
               </div>
+
+              <div className="grid gap-2">
+                <label className="text-sm font-medium text-slate-700">Rôle / Niche</label>
+                <select value={draft.role} onChange={(e) => {
+                  const role = e.target.value;
+                  // map role to niche defaults
+                  let niche_id = "default";
+                  if (role === "e9999") niche_id = "aya";
+                  if (role === "x5555") niche_id = "kechaf";
+                  if (role === "VV9876") niche_id = "vvsuper";
+                  if (role === "member") niche_id = "default";
+                  update({ role, niche_id });
+                }} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
+                  <option value="member">Membre (par défaut)</option>
+                  <option value="e9999">Aya Bucha (E9999)</option>
+                  <option value="x5555">Niche Kechaf (Organisation)</option>
+                  <option value="VV9876">Niche Supérieure (VV9876)</option>
+                </select>
+              </div>
               <div className="grid gap-2">
                 <label className="text-sm font-medium text-slate-700">Mot de passe</label>
                 <input value={draft.password} type="password" onChange={(e) => update({ password: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
