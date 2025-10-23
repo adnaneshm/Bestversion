@@ -26,7 +26,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
     >
       <div dir="rtl" className="min-h-screen flex bg-[#F9F4E8] text-[#1E392A]">
         {/* Sidebar (right) */}
-        <Sidebar side="right" collapsible="none" variant="sidebar" className="bg-[#6B3FA0] text-[#F9F4E8]">
+        <Sidebar side="right" collapsible="icon" variant="sidebar" className="bg-[#6B3FA0] text-[#F9F4E8]">
           <SidebarHeader className="pt-4 px-3 text-right">
             <div className="flex items-center gap-2 justify-end">
               <div className="h-10 w-10 rounded-full bg-white text-[#6B3FA0] grid place-items-center font-bold">SH</div>
