@@ -38,6 +38,39 @@ export const handleRegister: RequestHandler = async (req, res) => {
     // Hash the password
     const password_hash = hashPassword(password);
 
+    // If tutor provided, create tutor first to get tutor_id
+    let tutor_id: number | null = null;
+    if (req.body.tutor && typeof req.body.tutor === 'object') {
+      const tutorPayload = {
+        type: req.body.tutor.type || null,
+        prenom: req.body.tutor.prenom || null,
+        nom: req.body.tutor.nom || null,
+        cin: req.body.tutor.cin || null,
+        phone: req.body.tutor.phone || null,
+        created_at: new Date().toISOString(),
+      };
+
+      const insertTutorResp = await fetch(`${supabaseUrl}/rest/v1/tutors`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": serviceRole,
+          Authorization: `Bearer ${serviceRole}`,
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify(tutorPayload),
+      });
+
+      if (!insertTutorResp.ok) {
+        const dt = await insertTutorResp.text();
+        console.warn('Failed to create tutor:', dt);
+      } else {
+        const tutorInserted = await insertTutorResp.json();
+        const t = Array.isArray(tutorInserted) ? tutorInserted[0] : tutorInserted;
+        tutor_id = t?.id ?? null;
+      }
+    }
+
     // Insert into app_users via Supabase REST API
     const userPayload: Record<string, any> = {
       id,
@@ -47,6 +80,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
       dob: dob || null,
       phone: phone || null,
       address: address || null,
+      tutor_id: tutor_id,
       created_at: new Date().toISOString(),
     };
 
