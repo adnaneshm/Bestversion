@@ -55,8 +55,6 @@ export default function Compte() {
             <li className="p-3 bg-white rounded shadow"><Link to="/activites">Mes activités</Link></li>
             <li className="p-3 bg-white rounded shadow"><Link to="/membres">Mes évaluations</Link></li>
             <li className="p-3 bg-white rounded shadow"><Link to="/marketplace">Mes achats</Link></li>
-            <li className="p-3 bg-white rounded shadow">Historique</li>
-            <li className="p-3 bg-white rounded shadow">Paramètres</li>
             <li className="p-3 bg-white rounded shadow">Notifications</li>
             <li className="p-3 bg-white rounded shadow"><Link to="/support">Support</Link></li>
           </ul>
