@@ -1,4 +1,3 @@
-import React from "react";
 import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { useAuth } from "@/lib/auth";
