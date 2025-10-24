@@ -23,6 +23,8 @@ import Rapports from "./pages/Rapports";
 import Marketplace from "./pages/Marketplace";
 import Idees from "./pages/Idees";
 import Membres from "./pages/Membres";
+import Activites from "./pages/Activites";
+import Support from "./pages/Support";
 
 const queryClient = new QueryClient();
 
