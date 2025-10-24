@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import RegisterChef from "./pages/RegisterChef";
 import Categories from "./pages/Categories";
 import ResetPassword from "./pages/ResetPassword";
 
