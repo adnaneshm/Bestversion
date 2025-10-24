@@ -144,17 +144,17 @@ export default function Register() {
                 <select value={draft.role} onChange={(e) => {
                   const role = e.target.value;
                   let niche_id = "default";
-                  if (role === "e9999") niche_id = "aya";
-                  if (role === "x5555") niche_id = "kechaf";
-                  if (role === "VV9876") niche_id = "vvsuper";
-                  if (role === "member") niche_id = "default";
+                  if (role === "chef_niche") niche_id = "aya";
+                  if (role === "sous_chef") niche_id = "kechaf";
+                  if (role === "chef_superieur") niche_id = "vvsuper";
+                  if (role === "membre") niche_id = "default";
                   const id = generateId(role);
                   update({ role, niche_id, id });
                 }} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
-                  <option value="member">Membre (par défaut)</option>
-                  <option value="e9999">Aya Bucha (E9999)</option>
-                  <option value="x5555">Niche Kechaf (Organisation)</option>
-                  <option value="VV9876">Niche Supérieure (VV9876)</option>
+                  <option value="membre">Membre (par défaut)</option>
+                  <option value="chef_niche">Chef de niches</option>
+                  <option value="sous_chef">Sous-chef</option>
+                  <option value="chef_superieur">Chef supérieur</option>
                 </select>
               </div>
 
