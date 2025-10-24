@@ -67,10 +67,21 @@ const App = () => (
 // Prevent createRoot being called multiple times during HMR by reusing existing root
 const container = document.getElementById("root");
 if (container) {
-  // store root on window to persist across HMR
-  const w = window as any;
-  if (!w.__root) {
-    w.__root = createRoot(container);
+  const g: any = globalThis as any;
+  try {
+    if (g.__REACT_ROOT__ && typeof g.__REACT_ROOT__.render === "function") {
+      g.__REACT_ROOT__.render(<App />);
+    } else {
+      g.__REACT_ROOT__ = createRoot(container);
+      g.__REACT_ROOT__.render(<App />);
+    }
+  } catch (err) {
+    // If something goes wrong, attempt to create root anew and render
+    try {
+      g.__REACT_ROOT__ = createRoot(container);
+      g.__REACT_ROOT__.render(<App />);
+    } catch (inner) {
+      console.error("Failed to initialize React root:", inner);
+    }
   }
-  w.__root.render(<App />);
 }
