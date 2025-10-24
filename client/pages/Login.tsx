@@ -81,9 +81,6 @@ export default function Login() {
           </form>
 
           <div className="text-center text-sm text-slate-600 mt-6">
-            <p>
-              Pas encore de compte? <a href="/creer-un-compte" className="text-violet-700 font-medium">Créer un compte</a>
-            </p>
             <p className="mt-2">
               <a className="text-violet-700" href="#">Mot de passe oublié?</a>
             </p>
