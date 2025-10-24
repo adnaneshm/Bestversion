@@ -17,7 +17,7 @@ type Draft = {
   tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
 };
 
-const CHEF_ROLES = ["e9999", "x5555", "VV9876"];
+const CHEF_ROLES = ["chef_niche", "sous_chef", "chef_superieur"];
 
 function generateId(role?: string) {
   const n = Math.floor(Math.random() * 9999) + 1;
