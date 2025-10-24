@@ -23,10 +23,20 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
     const { useSidebar } = require("@/components/ui/sidebar");
     const { toggleSidebar, state } = useSidebar();
     const collapsed = state === "collapsed";
+    const logo = "https://cdn.builder.io/api/v1/image/assets%2Fa15df83128b342b488b6310c10175043%2F6f9fe02f72934482afbb265a0adf75ea?format=webp&width=800";
     return (
-      <button onClick={toggleSidebar} aria-label="Toggle sidebar" className="h-8 w-8 rounded-full bg-white text-[#6B3FA0] grid place-items-center text-sm">
-        {/* when collapsed show logo small, else show X */}
-        {collapsed ? <span style={{ fontSize: 12 }}>SH</span> : <span style={{ fontSize: 12 }}>✕</span>}
+      <button onClick={toggleSidebar} aria-label="Toggle sidebar" className="flex items-center gap-2">
+        {collapsed ? (
+          <img src={logo} alt="SHM" style={{ width: 30, height: 30, borderRadius: 6 }} />
+        ) : (
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="SHM" style={{ width: 40, height: 40, borderRadius: 8 }} />
+            <div className="text-right">
+              <p className="text-sm font-semibold">Scoutisme Hassania</p>
+              <p className="text-xs opacity-90">SHM Portal</p>
+            </div>
+          </div>
+        )}
       </button>
     );
   }
