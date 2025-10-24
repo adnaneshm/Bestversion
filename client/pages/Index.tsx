@@ -30,14 +30,7 @@ export default function Index() {
             />
           </div>
 
-          <div className="text-center text-sm text-slate-600 mt-8">
-            <p>
-              Pas encore de compte? <a href="/creer-un-compte" className="text-violet-700 font-medium">Créer un compte</a>
-            </p>
-            <p className="mt-2">
-              Besoin d'aide?
-            </p>
-          </div>
+          {/* footer links removed per request */}
         </div>
       </section>
     </MainLayout>
