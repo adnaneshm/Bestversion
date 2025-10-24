@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth";
 import { User as UserIcon, Calendar, Music, Book, Play, FileText, ShoppingCart, Lightbulb } from "lucide-react";
