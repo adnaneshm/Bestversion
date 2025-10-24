@@ -171,7 +171,6 @@ export default function Register() {
                 <select value={draft.niche_id} onChange={(e) => update({ niche_id: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
                   <option value="actualites">Actualités</option>
                   <option value="organisation">Organisation</option>
-                  <option value="organisation">Organisation</option>
                   <option value="projet">Projet</option>
                   <option value="rapports">Rapports</option>
                   <option value="lois">Lois</option>
