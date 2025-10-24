@@ -13,12 +13,17 @@ type Draft = {
   address?: string;
   role?: string;
   niche_id?: string;
+  niches?: string[];
+  niche_superieure?: boolean;
   tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
 };
 
-function generateId() {
+const CHEF_ROLES = ["e9999", "x5555", "VV9876"];
+
+function generateId(role?: string) {
   const n = Math.floor(Math.random() * 9999) + 1;
-  return `E${String(n).padStart(4, "0")}`;
+  const prefix = role && CHEF_ROLES.includes(role) ? "X" : "E";
+  return `${prefix}${String(n).padStart(4, "0")}`;
 }
 
 export default function Register() {
