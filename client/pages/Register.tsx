@@ -169,8 +169,8 @@ export default function Register() {
 
                 <label className="text-sm font-medium text-slate-700 mt-2">Niche principale</label>
                 <select value={draft.niche_id} onChange={(e) => update({ niche_id: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
-                  <option value="default">Sélectionner une niche</option>
                   <option value="actualites">Actualités</option>
+                  <option value="organisation">Organisation</option>
                   <option value="organisation">Organisation</option>
                   <option value="projet">Projet</option>
                   <option value="rapports">Rapports</option>
