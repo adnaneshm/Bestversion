@@ -21,10 +21,8 @@ function Header() {
             <p className="text-base font-semibold">SHM Portal</p>
           </div>
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-          <NavLink to="/connexion" className={({ isActive }) => cn("hover:text-violet-700", isActive && "text-violet-700 font-medium")}>Se connecter</NavLink>
-          <NavLink to="/creer-un-compte" className={({ isActive }) => cn("text-white bg-violet-600 hover:bg-violet-700 px-3 py-1.5 rounded-md", isActive && "bg-violet-700")}>Créer un compte</NavLink>
-        </nav>
+        <div className="flex items-center gap-4 text-sm">
+        </div>
       </div>
     </header>
   );
