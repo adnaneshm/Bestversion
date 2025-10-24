@@ -15,7 +15,7 @@ function Header() {
     <header className="sticky top-0 z-30 border-b border-black/5 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container h-14 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-violet-600 text-white grid place-items-center font-bold">SH</div>
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fa15df83128b342b488b6310c10175043%2F6f9fe02f72934482afbb265a0adf75ea?format=webp&width=800" alt="SHM" className="h-8 w-8 rounded-md object-cover" />
           <div className="leading-tight">
             <p className="text-sm text-slate-500">Scoutisme Hassania Marocain</p>
             <p className="text-base font-semibold">SHM Portal</p>
