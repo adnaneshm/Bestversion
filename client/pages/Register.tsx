@@ -1,4 +1,3 @@
-import MainLayout from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import MainLayout from "@/components/layout/MainLayout";
 import { useEffect, useState } from "react";
@@ -32,15 +31,13 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // ensure id exists on first load
-    if (!draft.id) setDraft((d) => ({ ...d, id: generateId() }));
+    if (!draft.id) setDraft((d) => ({ ...d, id: generateId(d.role) }));
   }, []);
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
   function next() {
     setError(null);
-    // basic validation per step
     const isChef = CHEF_ROLES.includes(draft.role || "");
     const maxStep = isChef ? 2 : 3;
     if (step === 1) {
@@ -51,8 +48,6 @@ export default function Register() {
 
   function prev() {
     setError(null);
-    const isChef = CHEF_ROLES.includes(draft.role || "");
-    const maxStep = isChef ? 2 : 3;
     setStep((s) => Math.max(1, s - 1));
   }
 
@@ -64,18 +59,15 @@ export default function Register() {
       const params = new URLSearchParams(window.location.search);
       const category = params.get("category") || undefined;
 
-      // assemble tutor cin if split
       const tutor = draft.tutor ? { ...draft.tutor } : undefined;
       if (tutor) {
         const letters = (tutor as any).cinLetters || "";
         const digits = (tutor as any).cinDigits || "";
         (tutor as any).cin = letters + digits;
-        // clean helper props
         delete (tutor as any).cinLetters;
         delete (tutor as any).cinDigits;
       }
 
-      // If role is chef, remove tutor
       const isChef = CHEF_ROLES.includes(draft.role || "");
       const finalTutor = isChef ? undefined : tutor;
 
@@ -101,7 +93,6 @@ export default function Register() {
         body: JSON.stringify(payload),
       });
 
-      // Read text once and try to parse JSON from it
       const raw = await resp.text();
       let parsed: any = null;
       try {
@@ -116,7 +107,6 @@ export default function Register() {
         return;
       }
 
-      // success
       alert("Compte créé avec succès");
       window.location.href = "/";
     } catch (err: any) {
@@ -133,7 +123,7 @@ export default function Register() {
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Créer un compte</h1>
               <p className="text-slate-600 mt-1">Étape {step} de 4</p>
             </div>
-            <div className="text-sm text-slate-500">ID généré: <span className="font-mono font-semibold ml-2">{draft.id}</span> <button type="button" className="ml-3 text-xs text-violet-700 underline" onClick={() => update({ id: generateId() })}>Régénérer</button></div>
+            <div className="text-sm text-slate-500">ID généré: <span className="font-mono font-semibold ml-2">{draft.id}</span> <button type="button" className="ml-3 text-xs text-violet-700 underline" onClick={() => update({ id: generateId(draft.role) })}>Régénérer</button></div>
           </div>
 
           {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
@@ -153,13 +143,11 @@ export default function Register() {
                 <label className="text-sm font-medium text-slate-700">Rôle / Niche</label>
                 <select value={draft.role} onChange={(e) => {
                   const role = e.target.value;
-                  // map role to niche defaults
                   let niche_id = "default";
                   if (role === "e9999") niche_id = "aya";
                   if (role === "x5555") niche_id = "kechaf";
                   if (role === "VV9876") niche_id = "vvsuper";
                   if (role === "member") niche_id = "default";
-                  // regenerate id according to role category
                   const id = generateId(role);
                   update({ role, niche_id, id });
                 }} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
@@ -169,6 +157,7 @@ export default function Register() {
                   <option value="VV9876">Niche Supérieure (VV9876)</option>
                 </select>
               </div>
+
               <div className="grid gap-2">
                 <label className="text-sm font-medium text-slate-700">Mot de passe</label>
                 <input value={draft.password} type="password" onChange={(e) => update({ password: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
@@ -204,10 +193,6 @@ export default function Register() {
                     update({ niches: Array.from(next) });
                   }} /> Lois</label>
                 </div>
-              </div>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">Confirmer le mot de passe</label>
-                <input type="password" className="h-11 rounded-md border border-slate-200 bg-white px-3" />
               </div>
             </div>
           )}
