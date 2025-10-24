@@ -70,13 +70,15 @@ if (container) {
   const g: any = globalThis as any;
   try {
     if (g.__REACT_ROOT__ && typeof g.__REACT_ROOT__.render === "function") {
+      console.debug("Reusing existing React root");
       g.__REACT_ROOT__.render(<App />);
     } else {
+      console.debug("Creating new React root");
       g.__REACT_ROOT__ = createRoot(container);
       g.__REACT_ROOT__.render(<App />);
     }
   } catch (err) {
-    // If something goes wrong, attempt to create root anew and render
+    console.warn("Error rendering with existing root, recreating", err);
     try {
       g.__REACT_ROOT__ = createRoot(container);
       g.__REACT_ROOT__.render(<App />);
