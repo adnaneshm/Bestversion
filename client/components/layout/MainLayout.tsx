@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -22,8 +21,7 @@ function Header() {
             <p className="text-base font-semibold">SHM Portal</p>
           </div>
         </Link>
-        <div className="flex items-center gap-4 text-sm">
-        </div>
+        <div className="flex items-center gap-4 text-sm"></div>
       </div>
     </header>
   );
