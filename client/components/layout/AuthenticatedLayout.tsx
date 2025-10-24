@@ -122,9 +122,9 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NavLink to="/marketplace" className="flex items-center justify-between w-full">
+                  <a href="https://shm-safi-marketplace.netlify.app" target="_blank" rel="noreferrer" className="flex items-center justify-between w-full">
                     <span className="flex items-center gap-3 justify-end"><ShoppingCart /> <span>Marketplace</span></span>
-                  </NavLink>
+                  </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
