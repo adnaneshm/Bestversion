@@ -64,4 +64,13 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Prevent createRoot being called multiple times during HMR by reusing existing root
+const container = document.getElementById("root");
+if (container) {
+  // store root on window to persist across HMR
+  const w = window as any;
+  if (!w.__root) {
+    w.__root = createRoot(container);
+  }
+  w.__root.render(<App />);
+}
