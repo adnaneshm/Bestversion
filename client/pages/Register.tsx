@@ -164,35 +164,18 @@ export default function Register() {
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">Niches (sélectionnez au moins une si applicable)</label>
-                <div className="flex flex-col gap-2">
-                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={!!draft.niche_superieure} onChange={(e) => update({ niche_superieure: e.target.checked })} /> Niche Supérieure</label>
-                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('actualites')} onChange={(e) => {
-                    const next = new Set(draft.niches || []);
-                    if (e.target.checked) next.add('actualites'); else next.delete('actualites');
-                    update({ niches: Array.from(next) });
-                  }} /> Actualités</label>
-                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('organisation')} onChange={(e) => {
-                    const next = new Set(draft.niches || []);
-                    if (e.target.checked) next.add('organisation'); else next.delete('organisation');
-                    update({ niches: Array.from(next) });
-                  }} /> Organisation</label>
-                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('projet')} onChange={(e) => {
-                    const next = new Set(draft.niches || []);
-                    if (e.target.checked) next.add('projet'); else next.delete('projet');
-                    update({ niches: Array.from(next) });
-                  }} /> Projet</label>
-                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('rapports')} onChange={(e) => {
-                    const next = new Set(draft.niches || []);
-                    if (e.target.checked) next.add('rapports'); else next.delete('rapports');
-                    update({ niches: Array.from(next) });
-                  }} /> Rapports</label>
-                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('lois')} onChange={(e) => {
-                    const next = new Set(draft.niches || []);
-                    if (e.target.checked) next.add('lois'); else next.delete('lois');
-                    update({ niches: Array.from(next) });
-                  }} /> Lois</label>
-                </div>
+                <label className="text-sm font-medium text-slate-700">Niche supérieure</label>
+                <label className="inline-flex items-center gap-2"><input type="checkbox" checked={!!draft.niche_superieure} onChange={(e) => update({ niche_superieure: e.target.checked })} /> Niche Supérieure</label>
+
+                <label className="text-sm font-medium text-slate-700 mt-2">Niche principale</label>
+                <select value={draft.niche_id} onChange={(e) => update({ niche_id: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
+                  <option value="default">Sélectionner une niche</option>
+                  <option value="actualites">Actualités</option>
+                  <option value="organisation">Organisation</option>
+                  <option value="projet">Projet</option>
+                  <option value="rapports">Rapports</option>
+                  <option value="lois">Lois</option>
+                </select>
               </div>
             </div>
           )}
