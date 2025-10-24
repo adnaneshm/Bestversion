@@ -1,5 +1,6 @@
 import MainLayout from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
+import MainLayout from "@/components/layout/MainLayout";
 import { useEffect, useState } from "react";
 
 type Draft = {
