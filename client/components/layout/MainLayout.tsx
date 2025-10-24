@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function AppMainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_80%_-200px,rgba(124,58,237,0.08),transparent_60%),linear-gradient(to_bottom_right,#fff7ec,#f6f2ea)] text-slate-800">
       <Header />
