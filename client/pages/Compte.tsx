@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Compte() {
   const { user } = useAuth();
