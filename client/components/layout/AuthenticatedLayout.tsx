@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth";
@@ -52,7 +53,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
     >
       <div dir="rtl" className="min-h-screen flex bg-[#F9F4E8] text-[#1E392A]">
         {/* Sidebar (right) */}
-        <Sidebar side="right" collapsible="icon" variant="sidebar" className="bg-[#6B3FA0] text-[#F9F4E8]">
+        <Sidebar side="right" collapsible="none" variant="inset" className="bg-[#6B3FA0] text-[#F9F4E8]">
           <SidebarHeader className="pt-4 px-3 text-right">
             <div className="flex items-center gap-2 justify-end">
               <div className="h-10 w-10 rounded-full bg-white text-[#6B3FA0] grid place-items-center font-bold">SH</div>
@@ -139,7 +140,11 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
         </Sidebar>
 
         {/* Main content using SidebarInset so the sidebar layout/padding works */}
-        <SidebarInset className="flex-1 p-6 md:p-10 bg-[#F9F4E8]">
+        <SidebarInset className="flex-1 p-4 md:p-10 bg-[#F9F4E8]">
+          <div className="md:hidden mb-3 flex items-center justify-between">
+            <SidebarTrigger />
+            <div className="text-sm font-semibold">Scoutisme Hassania</div>
+          </div>
           <div className="max-w-6xl mx-auto">{children}</div>
         </SidebarInset>
       </div>
