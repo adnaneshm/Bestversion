@@ -19,9 +19,6 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
 
   // small inner toggle uses useSidebar and must be rendered inside the provider
   function InnerSidebarToggle() {
-    // lazy import hook to avoid hooks usage before provider
-    // @ts-ignore
-    const { useSidebar } = require("@/components/ui/sidebar");
     const { toggleSidebar, state } = useSidebar();
     const collapsed = state === "collapsed";
     const logo = "https://cdn.builder.io/api/v1/image/assets%2Fa15df83128b342b488b6310c10175043%2F6f9fe02f72934482afbb265a0adf75ea?format=webp&width=800";
