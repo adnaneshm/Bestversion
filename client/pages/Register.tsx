@@ -28,7 +28,7 @@ function generateId(role?: string) {
 
 export default function Register() {
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", role: "member", niche_id: "default" });
+  const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", role: "member", niche_id: "default", niches: [], niche_superieure: false });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,14 +41,18 @@ export default function Register() {
   function next() {
     setError(null);
     // basic validation per step
+    const isChef = CHEF_ROLES.includes(draft.role || "");
+    const maxStep = isChef ? 2 : 3;
     if (step === 1) {
       if (!draft.prenom || !draft.nom || !draft.password) return setError("Veuillez remplir les champs d'identifiants");
     }
-    setStep((s) => Math.min(3, s + 1));
+    setStep((s) => Math.min(maxStep, s + 1));
   }
 
   function prev() {
     setError(null);
+    const isChef = CHEF_ROLES.includes(draft.role || "");
+    const maxStep = isChef ? 2 : 3;
     setStep((s) => Math.max(1, s - 1));
   }
 
@@ -71,6 +75,10 @@ export default function Register() {
         delete (tutor as any).cinDigits;
       }
 
+      // If role is chef, remove tutor
+      const isChef = CHEF_ROLES.includes(draft.role || "");
+      const finalTutor = isChef ? undefined : tutor;
+
       const payload = {
         id: draft.id,
         prenom: draft.prenom,
@@ -81,8 +89,10 @@ export default function Register() {
         address: draft.address || null,
         role: (draft as any).role || null,
         niche_id: (draft as any).niche_id || null,
+        niches: draft.niches || [],
+        niche_superieure: draft.niche_superieure || false,
         category,
-        tutor,
+        tutor: finalTutor,
       };
 
       const resp = await fetch("/api/register", {
@@ -149,7 +159,9 @@ export default function Register() {
                   if (role === "x5555") niche_id = "kechaf";
                   if (role === "VV9876") niche_id = "vvsuper";
                   if (role === "member") niche_id = "default";
-                  update({ role, niche_id });
+                  // regenerate id according to role category
+                  const id = generateId(role);
+                  update({ role, niche_id, id });
                 }} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
                   <option value="member">Membre (par défaut)</option>
                   <option value="e9999">Aya Bucha (E9999)</option>
@@ -160,6 +172,38 @@ export default function Register() {
               <div className="grid gap-2">
                 <label className="text-sm font-medium text-slate-700">Mot de passe</label>
                 <input value={draft.password} type="password" onChange={(e) => update({ password: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
+              </div>
+
+              <div className="grid gap-2">
+                <label className="text-sm font-medium text-slate-700">Niches (sélectionnez au moins une si applicable)</label>
+                <div className="flex flex-col gap-2">
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={!!draft.niche_superieure} onChange={(e) => update({ niche_superieure: e.target.checked })} /> Niche Supérieure</label>
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('actualites')} onChange={(e) => {
+                    const next = new Set(draft.niches || []);
+                    if (e.target.checked) next.add('actualites'); else next.delete('actualites');
+                    update({ niches: Array.from(next) });
+                  }} /> Actualités</label>
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('organisation')} onChange={(e) => {
+                    const next = new Set(draft.niches || []);
+                    if (e.target.checked) next.add('organisation'); else next.delete('organisation');
+                    update({ niches: Array.from(next) });
+                  }} /> Organisation</label>
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('projet')} onChange={(e) => {
+                    const next = new Set(draft.niches || []);
+                    if (e.target.checked) next.add('projet'); else next.delete('projet');
+                    update({ niches: Array.from(next) });
+                  }} /> Projet</label>
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('rapports')} onChange={(e) => {
+                    const next = new Set(draft.niches || []);
+                    if (e.target.checked) next.add('rapports'); else next.delete('rapports');
+                    update({ niches: Array.from(next) });
+                  }} /> Rapports</label>
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={draft.niches?.includes('lois')} onChange={(e) => {
+                    const next = new Set(draft.niches || []);
+                    if (e.target.checked) next.add('lois'); else next.delete('lois');
+                    update({ niches: Array.from(next) });
+                  }} /> Lois</label>
+                </div>
               </div>
               <div className="grid gap-2">
                 <label className="text-sm font-medium text-slate-700">Confirmer le mot de passe</label>
@@ -197,7 +241,7 @@ export default function Register() {
             </div>
           )}
 
-          {step === 3 && (
+          {step === 3 && !CHEF_ROLES.includes(draft.role || "") && (
             <div>
               <h3 className="font-semibold text-lg mb-3">Tuteur</h3>
               <div className="grid gap-3">
@@ -217,6 +261,12 @@ export default function Register() {
                 </div>
                 <input placeholder="Téléphone" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
               </div>
+            </div>
+          )}
+
+          {step === 3 && CHEF_ROLES.includes(draft.role || "") && (
+            <div className="p-3 bg-yellow-50 rounded">
+              <p className="text-sm">Vous avez sélectionné un rôle de chef — aucun tuteur n'est requis.</p>
             </div>
           )}
 
