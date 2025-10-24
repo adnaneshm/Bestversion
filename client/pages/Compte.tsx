@@ -27,6 +27,17 @@ export default function Compte() {
     return () => { mounted = false; };
   }, []);
 
+  function computeAgeFromDob(dob?: string) {
+    if (!dob) return undefined;
+    const b = new Date(dob);
+    if (isNaN(b.getTime())) return undefined;
+    const now = new Date();
+    let age = now.getFullYear() - b.getFullYear();
+    const m = now.getMonth() - b.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--;
+    return age;
+  }
+
   return (
     <AuthenticatedLayout>
       <section>
