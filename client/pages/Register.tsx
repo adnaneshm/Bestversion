@@ -242,8 +242,8 @@ export default function Register() {
             <a href="/connexion" className="text-slate-600 hover:text-slate-900">Déjà un compte? Se connecter</a>
             <div className="flex items-center gap-3">
               {step > 1 && <Button variant="outline" onClick={prev}>Précédent</Button>}
-              {step < 3 && <Button onClick={next} className="bg-violet-600 hover:bg-violet-700">Suivant</Button>}
-              {step === 3 && <Button onClick={finish} className="bg-violet-600 hover:bg-violet-700">Créer mon compte</Button>}
+              {step < maxStep && <Button onClick={next} className="bg-violet-600 hover:bg-violet-700">Suivant</Button>}
+              {step === maxStep && <Button onClick={finish} className="bg-violet-600 hover:bg-violet-700">Créer mon compte</Button>}
             </div>
           </div>
         </div>
