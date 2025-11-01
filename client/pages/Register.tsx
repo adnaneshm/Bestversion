@@ -94,16 +94,30 @@ export default function Register() {
         body: JSON.stringify(payload),
       });
 
-      const raw = await resp.text();
-      let parsed: any = null;
-      try {
-        parsed = JSON.parse(raw);
-      } catch (e) {
-        parsed = null;
+      // safe response reader: handle cases where body may already be read
+      async function readResp(r: Response) {
+        try {
+          const txt = await r.text();
+          let parsed: any = null;
+          try { parsed = JSON.parse(txt); } catch (e) { parsed = null; }
+          return { txt, parsed };
+        } catch (err: any) {
+          // try clone (may work if original stream was read elsewhere)
+          try {
+            const txt = await r.clone().text();
+            let parsed: any = null;
+            try { parsed = JSON.parse(txt); } catch (e) { parsed = null; }
+            return { txt, parsed };
+          } catch (inner) {
+            return { txt: null, parsed: null };
+          }
+        }
       }
 
+      const { txt, parsed } = await readResp(resp);
+
       if (!resp.ok) {
-        const msg = (parsed && (parsed.detail || parsed.error)) || raw || `HTTP ${resp.status}`;
+        const msg = (parsed && (parsed.detail || parsed.error)) || txt || `HTTP ${resp.status}`;
         setError(`Erreur serveur: ${msg}`);
         return;
       }
