@@ -36,10 +36,11 @@ export default function Register() {
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
+  const isChefRole = CHEF_ROLES.includes(draft.role || "");
+  const maxStep = isChefRole ? 2 : 3;
+
   function next() {
     setError(null);
-    const isChef = CHEF_ROLES.includes(draft.role || "");
-    const maxStep = isChef ? 2 : 3;
     if (step === 1) {
       if (!draft.prenom || !draft.nom || !draft.password) return setError("Veuillez remplir les champs d'identifiants");
     }
