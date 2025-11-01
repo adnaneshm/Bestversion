@@ -6,6 +6,15 @@ export type User = {
   niche_id?: string;
   monthly_score?: number;
   age?: number;
+  dob?: string;
+  phone?: string;
+  cin?: string;
+  tutor?: {
+    prenom?: string;
+    nom?: string;
+    type?: string;
+    phone?: string;
+  };
   permissions?: string[];
 };
 
@@ -29,6 +38,14 @@ export const currentUser: User & { dob?: string } = {
   monthly_score: 82,
   dob: "1996-11-02",
   age: computeAge("1996-11-02"),
+  phone: "+212612989463",
+  cin: "AB123456",
+  tutor: {
+    prenom: "Fatima",
+    nom: "Belkhadir",
+    type: "parent",
+    phone: "+212600000000",
+  },
   permissions: ["create_eval_report"],
 };
 
