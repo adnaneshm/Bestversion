@@ -122,7 +122,7 @@ export default function Register() {
           <div className="mb-4 flex items-baseline justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Créer un compte</h1>
-              <p className="text-slate-600 mt-1">Étape {step} de 4</p>
+              <p className="text-slate-600 mt-1">Étape {step} de {maxStep}</p>
             </div>
             <div className="text-sm text-slate-500">ID généré: <span className="font-mono font-semibold ml-2">{draft.id}</span> <button type="button" className="ml-3 text-xs text-violet-700 underline" onClick={() => update({ id: generateId(draft.role) })}>Régénérer</button></div>
           </div>
