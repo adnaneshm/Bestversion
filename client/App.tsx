@@ -16,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 // Authenticated pages
 import Compte from "./pages/Compte";
+import CompteChef from "./pages/CompteChef";
 import Programme from "./pages/Programme";
 import Anachid from "./pages/Anachid";
 import Frida from "./pages/Frida";

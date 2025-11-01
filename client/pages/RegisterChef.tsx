@@ -48,8 +48,8 @@ export default function RegisterChef() {
         return;
       }
 
-      // success
-      window.location.href = "/connexion";
+      // success - redirect to chef dashboard
+      window.location.href = "/compte-chef";
     } catch (err: any) {
       setError(err?.message || "Erreur réseau");
     } finally {
