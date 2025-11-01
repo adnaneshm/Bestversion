@@ -65,6 +65,9 @@ export default function Compte() {
                 <p className="text-sm text-slate-500 mt-3">Niche</p>
                 <p className="font-medium">{user.niche_id || "—"}</p>
 
+                <p className="text-sm text-slate-500 mt-3">CIN</p>
+                <p className="font-medium">{((user as any).cin) || '—'}</p>
+
                 <p className="text-sm text-slate-500 mt-3">Âge</p>
                 <p className="font-medium">{computeAgeFromDob((user as any).dob) ?? '—'}</p>
 
