@@ -89,16 +89,39 @@ export const handleRegister: RequestHandler = async (req, res) => {
       created_at: new Date().toISOString(),
     };
 
-    const insertUserResp = await fetch(`${supabaseUrl}/rest/v1/app_users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": serviceRole,
-        Authorization: `Bearer ${serviceRole}`,
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify(userPayload),
-    });
+    // Try inserting into app_users; if the table doesn't exist try users as fallback (to handle different DB schemas)
+    async function tryInsertUser() {
+      const urlA = `${supabaseUrl}/rest/v1/app_users`;
+      const urlB = `${supabaseUrl}/rest/v1/users`;
+
+      const doPost = async (url: string) => {
+        return await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": serviceRole,
+            Authorization: `Bearer ${serviceRole}`,
+            Prefer: "return=representation",
+          },
+          body: JSON.stringify(userPayload),
+        });
+      };
+
+      let resp = await doPost(urlA);
+      if (!resp.ok) {
+        const txt = await resp.text().catch(() => "");
+        // Detect PostgREST missing table error and fallback
+        if (txt && txt.includes("Could not find the table 'public.app_users'") || txt.includes('PGRST205')) {
+          resp = await doPost(urlB);
+        } else {
+          // For other errors, still return the original response
+          return resp;
+        }
+      }
+      return resp;
+    }
+
+    const insertUserResp = await tryInsertUser();
 
     if (!insertUserResp.ok) {
       const errText = await insertUserResp.text();
