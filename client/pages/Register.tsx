@@ -75,8 +75,17 @@ export default function Register() {
       const isChef = CHEF_ROLES.includes(draft.role || "");
       const finalTutor = isChef ? undefined : tutor;
 
+      // Ensure id prefix matches category if provided
+      let finalId = draft.id;
+      if (category) {
+        const pref = category.toUpperCase();
+        if (!finalId || finalId[0] !== pref) {
+          finalId = formatId(pref);
+        }
+      }
+
       const payload = {
-        id: draft.id,
+        id: finalId,
         prenom: draft.prenom,
         nom: draft.nom,
         password: draft.password,
