@@ -58,6 +58,14 @@ export default function Register() {
   async function finish() {
     if (!draft.id || !draft.prenom || !draft.nom || !draft.password) return setError("Informations incomplètes");
 
+    // If role is not chef, require tutor info
+    const isChef = CHEF_ROLES.includes(draft.role || "");
+    if (!isChef) {
+      if (!draft.tutor || !draft.tutor.prenom || !draft.tutor.nom || !draft.tutor.phone) {
+        return setError("Veuillez compléter les informations du tuteur");
+      }
+    }
+
     setError(null);
     try {
       const params = new URLSearchParams(window.location.search);
