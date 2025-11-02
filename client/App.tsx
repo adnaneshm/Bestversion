@@ -47,6 +47,7 @@ const App = () => (
 
           {/* Authenticated area */}
           <Route path="/compte" element={<Compte />} />
+          <Route path="/compte-cree" element={<CompteCree />} />
           <Route path="/programme" element={<Programme />} />
           <Route path="/anachid" element={<Anachid />} />
           <Route path="/frida" element={<Frida />} />
