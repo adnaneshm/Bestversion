@@ -149,7 +149,8 @@ export default function Register() {
 
       // Redirect to ephemeral success page showing the generated id
       const roleParam = (draft as any).role ? `&role=${encodeURIComponent((draft as any).role)}` : "";
-      window.location.href = `/compte-cree?id=${encodeURIComponent(draft.id)}${roleParam}`;
+      const idToShow = typeof finalId !== 'undefined' ? finalId : draft.id;
+      window.location.href = `/compte-cree?id=${encodeURIComponent(idToShow)}${roleParam}`;
     } catch (err: any) {
       setError(err?.message || "Erreur réseau");
     }
