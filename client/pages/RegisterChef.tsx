@@ -32,7 +32,9 @@ export default function RegisterChef() {
         password,
       };
 
-      const resp = await fetch("/api/register", {
+      const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+      const url = `${base.replace(/\/$/, '')}/api/register`;
+      const resp = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
