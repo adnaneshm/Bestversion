@@ -40,7 +40,9 @@ export default function Register() {
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
-  const isChefRole = CHEF_ROLES.includes(draft.role || "");
+  const fromMainChefs = !!(paramsInit.get('from') === 'chefs' || paramsInit.get('origin') === 'chefs' || paramsInit.get('source') === 'chefs');
+  const isRealChef = REAL_CHEF_ROLES.includes(draft.role || "") || fromMainChefs;
+  const isNicknameChef = (draft.role || "") === NICKNAME_CHEF_ROLE;
   const maxStep = 3; // always three steps: compte, perso, tuteur
 
   function next() {
