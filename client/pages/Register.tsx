@@ -163,7 +163,7 @@ export default function Register() {
           <div className="mb-4 flex items-baseline justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Créer un compte</h1>
-              <p className="text-slate-600 mt-1">Étape {step} de {maxStep}</p>
+              <p className="text-slate-600 mt-1">Étape {step} de 4</p>
             </div>
           </div>
 
