@@ -61,9 +61,8 @@ export default function Register() {
   async function finish() {
     if (!draft.id || !draft.prenom || !draft.nom || !draft.password) return setError("Informations incomplètes");
 
-    // If role is not chef, require tutor info
-    const isChef = CHEF_ROLES.includes(draft.role || "");
-    if (!isChef) {
+    // If role is not a real chef, require tutor info
+    if (!isRealChef) {
       if (!draft.tutor || !draft.tutor.prenom || !draft.tutor.nom || !draft.tutor.phone) {
         return setError("Veuillez compléter les informations du tuteur");
       }
