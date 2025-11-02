@@ -19,15 +19,20 @@ type Draft = {
 
 const CHEF_ROLES = ["chef_niche", "sous_chef", "chef_superieur"];
 
-function generateId(role?: string) {
-  const n = Math.floor(Math.random() * 9999) + 1;
-  const prefix = role && CHEF_ROLES.includes(role) ? "X" : "E";
-  return `${prefix}${String(n).padStart(4, "0")}`;
+function generateRandomNumber() {
+  return Math.floor(Math.random() * 9999) + 1;
+}
+
+function formatId(prefix: string) {
+  return `${prefix}${String(generateRandomNumber()).padStart(4, "0")}`;
 }
 
 export default function Register() {
+  const paramsInit = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const initialCategory = paramsInit.get('category') || undefined;
+
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", role: "member", niche_id: "default", niches: [], niche_superieure: false });
+  const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: initialCategory ? formatId(initialCategory.toUpperCase()) : formatId('E'), prenom: "", nom: "", password: "", dob: "", role: "membre", niche_id: "default", niches: [], niche_superieure: false });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
