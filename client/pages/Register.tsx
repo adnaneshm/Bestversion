@@ -122,8 +122,9 @@ export default function Register() {
         return;
       }
 
-      alert("Compte créé avec succès");
-      window.location.href = "/";
+      // Redirect to ephemeral success page showing the generated id
+      const roleParam = (draft as any).role ? `&role=${encodeURIComponent((draft as any).role)}` : "";
+      window.location.href = `/compte-cree?id=${encodeURIComponent(draft.id)}${roleParam}`;
     } catch (err: any) {
       setError(err?.message || "Erreur réseau");
     }
