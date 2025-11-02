@@ -19,6 +19,8 @@ type Draft = {
 
 const REAL_CHEF_ROLES = ["sous_chef", "chef_superieur"]; // real chefs
 const NICKNAME_CHEF_ROLE = "chef_niche"; // nickname-only role
+// compatibility alias for older code
+const CHEF_ROLES = [...REAL_CHEF_ROLES, NICKNAME_CHEF_ROLE];
 
 function generateRandomNumber() {
   return Math.floor(Math.random() * 9999) + 1;
