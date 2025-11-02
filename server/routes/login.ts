@@ -26,12 +26,26 @@ export const handleLogin: RequestHandler = async (req, res) => {
     if (!id || !password) return res.status(400).json({ error: "Missing id or password" });
 
     // Fetch user by id
-    const resp = await fetch(`${supabaseUrl}/rest/v1/app_users?id=eq.${encodeURIComponent(id)}&select=*`, {
-      headers: {
-        apikey: serviceRole,
-        Authorization: `Bearer ${serviceRole}`,
-      },
-    });
+    // Try querying app_users first, fallback to users if table missing
+    async function tryQueryUserById(idVal: string) {
+      const urlA = `${supabaseUrl}/rest/v1/app_users?id=eq.${encodeURIComponent(idVal)}&select=*`;
+      const urlB = `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(idVal)}&select=*`;
+
+      const doGet = async (url: string) => await fetch(url, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+
+      let resp = await doGet(urlA);
+      if (!resp.ok) {
+        const txt = await resp.text().catch(() => "");
+        if (txt && txt.includes("Could not find the table 'public.app_users'") || txt.includes('PGRST205')) {
+          resp = await doGet(urlB);
+        } else {
+          return resp;
+        }
+      }
+      return resp;
+    }
+
+    const resp = await tryQueryUserById(id);
 
     if (!resp.ok) {
       const dt = await resp.text();
