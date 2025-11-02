@@ -82,7 +82,7 @@ export default function Register() {
         delete (tutor as any).cinDigits;
       }
 
-      const isChef = CHEF_ROLES.includes(draft.role || "");
+      const isChef = isRealChef; // compatibility
       const finalTutor = isChef ? undefined : tutor;
 
       // Ensure id prefix matches category if provided
