@@ -64,8 +64,9 @@ export default function RegisterChef() {
         return;
       }
 
-      // success - redirect to chef dashboard
-      window.location.href = "/compte-chef";
+      // success - redirect to ephemeral success page showing id and role
+      const roleParam = role ? `&role=${encodeURIComponent(role)}` : "";
+      window.location.href = `/compte-cree?id=${encodeURIComponent(payload.prenom ? payload.prenom + payload.nom : '')}${roleParam}`;
     } catch (err: any) {
       setError(err?.message || "Erreur réseau");
     } finally {
