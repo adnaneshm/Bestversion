@@ -40,7 +40,7 @@ export default function Register() {
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
   const isChefRole = CHEF_ROLES.includes(draft.role || "");
-  const maxStep = isChefRole ? 2 : 3;
+  const maxStep = 3; // always three steps: compte, perso, tuteur
 
   function next() {
     setError(null);
