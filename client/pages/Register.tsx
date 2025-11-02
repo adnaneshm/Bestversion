@@ -182,8 +182,7 @@ export default function Register() {
                   if (role === "sous_chef") niche_id = "kechaf";
                   if (role === "chef_superieur") niche_id = "vvsuper";
                   if (role === "membre") niche_id = "default";
-                  const id = generateId(role);
-                  update({ role, niche_id, id });
+                  update({ role, niche_id });
                 }} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
                   <option value="membre">Membre (par défaut)</option>
                   <option value="chef_niche">Chef de niches</option>
