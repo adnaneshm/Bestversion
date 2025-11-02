@@ -17,7 +17,8 @@ type Draft = {
   tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
 };
 
-const CHEF_ROLES = ["chef_niche", "sous_chef", "chef_superieur"];
+const REAL_CHEF_ROLES = ["sous_chef", "chef_superieur"]; // real chefs
+const NICKNAME_CHEF_ROLE = "chef_niche"; // nickname-only role
 
 function generateRandomNumber() {
   return Math.floor(Math.random() * 9999) + 1;
