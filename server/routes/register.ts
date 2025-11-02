@@ -94,7 +94,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
       const urlA = `${supabaseUrl}/rest/v1/app_users`;
       const urlB = `${supabaseUrl}/rest/v1/users`;
 
-      const doPost = async (url: string) => {
+      const doPostWithBody = async (url: string, bodyPayload: Record<string, any>) => {
         return await fetch(url, {
           method: "POST",
           headers: {
@@ -103,21 +103,45 @@ export const handleRegister: RequestHandler = async (req, res) => {
             Authorization: `Bearer ${serviceRole}`,
             Prefer: "return=representation",
           },
-          body: JSON.stringify(userPayload),
+          body: JSON.stringify(bodyPayload),
         });
       };
 
-      let resp = await doPost(urlA);
+      // First try app_users
+      let resp = await doPostWithBody(urlA, userPayload);
       if (!resp.ok) {
         const txt = await resp.text().catch(() => "");
-        // Detect PostgREST missing table error and fallback
-        if (txt && txt.includes("Could not find the table 'public.app_users'") || txt.includes('PGRST205')) {
-          resp = await doPost(urlB);
+        // Detect PostgREST missing table error and fallback to users
+        if ((txt && txt.includes("Could not find the table 'public.app_users'")) || txt.includes('PGRST205')) {
+          // Try inserting into users with the original payload first
+          resp = await doPostWithBody(urlB, userPayload);
+
+          if (!resp.ok) {
+            const txt2 = await resp.text().catch(() => "");
+
+            // Try to detect missing column error and retry without that column
+            // Patterns: "Could not find the column 'address'" or 'column "address" does not exist'
+            const m = txt2.match(/Could not find the column '([^']+)'/) || txt2.match(/column "([^"]+)" does not exist/);
+            if (m && m[1]) {
+              const col = m[1];
+              if (col in userPayload) {
+                const filtered = { ...userPayload };
+                delete filtered[col as keyof typeof filtered];
+                // Retry once with filtered payload
+                const retryResp = await doPostWithBody(urlB, filtered);
+                return retryResp;
+              }
+            }
+
+            // If we couldn't handle the error specially, return the response we got from users
+            return resp;
+          }
         } else {
-          // For other errors, still return the original response
+          // For other errors when inserting into app_users, return original response
           return resp;
         }
       }
+
       return resp;
     }
 
