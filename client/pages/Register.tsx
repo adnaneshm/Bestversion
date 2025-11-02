@@ -29,6 +29,7 @@ export default function Register() {
   const [step, setStep] = useState(1);
   const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", role: "member", niche_id: "default", niches: [], niche_superieure: false });
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!draft.id) setDraft((d) => ({ ...d, id: generateId(d.role) }));
