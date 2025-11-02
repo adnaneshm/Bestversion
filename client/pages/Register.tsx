@@ -92,7 +92,8 @@ export default function Register() {
       setLoading(true);
       let resp: Response | null = null;
       try {
-        const url = `${window.location.origin}/api/register`;
+        const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+        const url = `${base.replace(/\/$/, '')}/api/register`;
         resp = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
