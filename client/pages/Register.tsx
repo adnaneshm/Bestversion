@@ -268,9 +268,9 @@ export default function Register() {
           <div className="flex items-center justify-between gap-4 pt-4">
             <a href="/connexion" className="text-slate-600 hover:text-slate-900">Déjà un compte? Se connecter</a>
             <div className="flex items-center gap-3">
-              {step > 1 && <Button variant="outline" onClick={prev}>Précédent</Button>}
-              {step < maxStep && <Button onClick={next} className="bg-violet-600 hover:bg-violet-700">Suivant</Button>}
-              {step === maxStep && <Button onClick={finish} className="bg-violet-600 hover:bg-violet-700">Créer mon compte</Button>}
+              {step > 1 && <Button variant="outline" onClick={prev} disabled={loading}>Précédent</Button>}
+              {step < maxStep && <Button onClick={next} className="bg-violet-600 hover:bg-violet-700" disabled={loading}>Suivant</Button>}
+              {step === maxStep && <Button onClick={finish} className="bg-violet-600 hover:bg-violet-700" disabled={loading}>{loading ? 'Enregistrement…' : 'Créer mon compte'}</Button>}
             </div>
           </div>
         </div>
