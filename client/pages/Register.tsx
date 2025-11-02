@@ -36,9 +36,6 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!draft.id) setDraft((d) => ({ ...d, id: generateId(d.role) }));
-  }, []);
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
