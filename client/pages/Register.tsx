@@ -263,14 +263,20 @@ export default function Register() {
             <div>
               <h3 className="font-semibold text-lg mb-3">Tuteur</h3>
 
-              {isChefRole && (
+              {isNicknameChef && (
+                <div className="p-3 bg-red-50 rounded mb-3">
+                  <p className="text-sm">Attention — «Chef de niches» est un surnom. Vous devez renseigner les informations du tuteur.</p>
+                </div>
+              )}
+
+              {isRealChef && !isNicknameChef && (
                 <div className="p-3 bg-yellow-50 rounded mb-3">
-                  <p className="text-sm">Vous avez sélectionné un rôle de chef — le tuteur est optionnel. Les champs sont désactivés par défaut.</p>
+                  <p className="text-sm">Vous avez sélectionné un rôle de chef via la section principale — le tuteur est optionnel. Les champs sont désactivés par défaut.</p>
                 </div>
               )}
 
               <div className="grid gap-3">
-                <select className="h-11 rounded-md border border-slate-200 bg-white px-3" disabled={isChefRole} value={draft.tutor?.type || ""} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), type: e.target.value } })}>
+                <select className="h-11 rounded-md border border-slate-200 bg-white px-3" disabled={isRealChef} value={draft.tutor?.type || ""} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), type: e.target.value } })}>
                   <option value="">Type de tuteur</option>
                   <option>Père</option>
                   <option>Mère</option>
