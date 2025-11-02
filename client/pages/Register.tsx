@@ -89,11 +89,21 @@ export default function Register() {
         tutor: finalTutor,
       };
 
-      const resp = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      setLoading(true);
+      let resp: Response | null = null;
+      try {
+        const url = `${window.location.origin}/api/register`;
+        resp = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch (err: any) {
+        console.error("Network error while calling /api/register", err);
+        setError("Erreur réseau : impossible de joindre le serveur. Vérifiez votre connexion ou réessayez plus tard.");
+        setLoading(false);
+        return;
+      }
 
       // safe response reader: handle cases where body may already be read
       async function readResp(r: Response) {
@@ -119,7 +129,9 @@ export default function Register() {
 
       if (!resp.ok) {
         const msg = (parsed && (parsed.detail || parsed.error)) || txt || `HTTP ${resp.status}`;
+        console.error("Register failed:", msg);
         setError(`Erreur serveur: ${msg}`);
+        setLoading(false);
         return;
       }
 
