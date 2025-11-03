@@ -319,7 +319,7 @@ export default function Register() {
 
           {step === 3 && (
             <div>
-              <h3 className="font-semibold text-lg mb-3">Tuteur</h3>
+              <h3 className="font-semibold text-lg mb-3">{t('tutor')}</h3>
 
               {isNicknameChef && (
                 <div className="p-3 bg-red-50 rounded mb-3" />
