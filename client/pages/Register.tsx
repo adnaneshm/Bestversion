@@ -98,8 +98,12 @@ export default function Register() {
       setError(`Informations incomplètes: ${missingBasics.join(', ')}`);
       return;
     }
-    if (!isValidDob(draft.dob)) {
-      setError(t('dob_invalid'));
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const minYear = currentYear - 18;
+    const maxYear = currentYear;
+    if (!isValidDobRange(draft.dob, minYear, maxYear)) {
+      setError(`${t('dob_invalid')} (${minYear} - ${maxYear})`);
       return;
     }
     const missingContact = [] as string[];
