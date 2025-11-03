@@ -91,7 +91,9 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
       chef_niche: 'رئيس خلية',
       sous_chef: 'قائد',
       chef_superieur: 'قائد أعلى'
-    }
+    },
+    chefs_title: 'القادة',
+    chefs_subtitle: 'قائمة وتقييمات القادة.'
   }
 };
 
