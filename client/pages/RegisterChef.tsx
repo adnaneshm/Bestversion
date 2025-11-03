@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
+import { t } from "@/lib/i18n";
 
 export default function RegisterChef() {
   const [prenom, setPrenom] = useState("");
