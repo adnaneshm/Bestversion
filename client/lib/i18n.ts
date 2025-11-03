@@ -63,7 +63,7 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
     tutor: 'الوكيل/الولي',
     dob_invalid: 'تاريخ الميلاد غير صالح.',
     dob_label: 'تاريخ الميلاد',
-    required_fields: 'حقول إجبارية مفقو��ة: {fields}',
+    required_fields: 'حقول إجبارية مفقودة: {fields}',
     fill_all_fields: 'المرجو تعبئة جميع الحقول.',
     passwords_mismatch: 'كلمتا المرور غير متطابقتين.',
     created_success: 'تم إنشاء الحساب بنجاح',
@@ -71,7 +71,7 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
     niche_sans: '(بدون خلية)',
     login_title: 'تسجيل الدخول',
     login_subtitle: 'ادخل إلى مساحة بوابة SHM الخاصة بك',
-    id_label: 'معرّف (مثال: E0001)',
+    id_label: 'مع��ّف (مثال: E0001)',
     first_name: 'الاسم',
     last_name: 'اللقب',
     password_label: 'كلمة المرور',
@@ -96,7 +96,10 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
       chef_superieur: 'قائد أعلى'
     },
     chefs_title: 'القادة',
-    chefs_subtitle: 'قائمة وتقييمات القادة.'
+    chefs_subtitle: 'قائمة وتقييمات القادة.',
+    niche_sup_label: 'خلية عليا',
+    niche_super_label: 'خلية عليا',
+    niche_principale: 'الخلية الرئيسية'
   }
 };
 
