@@ -47,30 +47,65 @@ export default function Register() {
   const isNicknameChef = (draft.role || "") === NICKNAME_CHEF_ROLE;
   const maxStep = 3; // always three steps: compte, perso, tuteur
 
+  function isValidDob(dob?: string) {
+    if (!dob) return false;
+    const parts = dob.split("-");
+    if (parts.length !== 3) return false;
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+    if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) return false;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    if (year < 1900 || year > currentYear) return false;
+    const d = new Date(year, month - 1, day);
+    return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day;
+  }
+
   function next() {
-    setError(null);
+    // invisible validation: do not show messages, just prevent navigation
     if (step === 1) {
-      if (!draft.prenom || !draft.nom || !draft.password) return setError("Veuillez remplir les champs d'identifiants");
+      if (!draft.prenom || !draft.nom || !draft.password) {
+        console.warn('step1 validation failed');
+        return;
+      }
+    }
+    if (step === 2) {
+      if (!isValidDob(draft.dob)) {
+        console.warn('invalid dob', draft.dob);
+        return;
+      }
     }
     setStep((s) => Math.min(maxStep, s + 1));
   }
 
   function prev() {
-    setError(null);
     setStep((s) => Math.max(1, s - 1));
   }
 
   async function finish() {
-    if (!draft.id || !draft.prenom || !draft.nom || !draft.password) return setError("Informations incomplètes");
+    // invisible validation for required fields (all required except niche_superieure)
+    if (!draft.id || !draft.prenom || !draft.nom || !draft.password) {
+      console.warn('missing basic fields');
+      return;
+    }
+    if (!isValidDob(draft.dob)) {
+      console.warn('invalid dob at finish', draft.dob);
+      return;
+    }
+    if (!draft.phone || !draft.address) {
+      console.warn('missing contact/address');
+      return;
+    }
 
     // If role is not a real chef, require tutor info
     if (!isRealChef) {
       if (!draft.tutor || !draft.tutor.prenom || !draft.tutor.nom || !draft.tutor.phone) {
-        return setError("Veuillez compléter les informations du tuteur");
+        console.warn('missing tutor info');
+        return;
       }
     }
 
-    setError(null);
     try {
       const params = new URLSearchParams(window.location.search);
       const category = params.get("category") || undefined;
