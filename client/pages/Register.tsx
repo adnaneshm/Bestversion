@@ -100,8 +100,8 @@ export default function Register() {
       return;
     }
 
-    // If role is not a real chef, require tutor info
-    if (!isRealChef) {
+    // Require tutor info (always)
+    {
       const t = draft.tutor || {};
       const missingTutor = [] as string[];
       if (!t.prenom) missingTutor.push('Prénom tuteur');
