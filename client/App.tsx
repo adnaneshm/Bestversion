@@ -41,6 +41,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/connexion" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register-chef" element={<RegisterChef />} />
           <Route path="/creer-un-compte" element={<Register />} />
           <Route path="/creer-un-chef" element={<RegisterChef />} />
           <Route path="/categories" element={<Categories />} />
