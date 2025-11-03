@@ -8,8 +8,8 @@ export default function Index() {
       <section className="mx-auto max-w-3xl">
         <div className="rounded-2xl bg-white/70 shadow-sm ring-1 ring-black/5 p-6 md:p-10">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-800">Bienvenue au Portail SHM</h1>
-            <p className="text-slate-600 mt-2">Sélectionnez votre profil pour accéder aux ressources appropriées</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-800">{t('welcome_title')}</h1>
+            <p className="text-slate-600 mt-2">{t('welcome_subtitle')}</p>
           </div>
 
           <div className="grid gap-6">
