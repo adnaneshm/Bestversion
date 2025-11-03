@@ -285,14 +285,14 @@ export default function Register() {
                   <option>Autre</option>
                 </select>
                 <div className="grid grid-cols-2 gap-2">
-                  <input placeholder="Prénom" disabled={isChefRole} value={draft.tutor?.prenom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), prenom: e.target.value } })} />
-                  <input placeholder="Nom" disabled={isChefRole} value={draft.tutor?.nom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), nom: e.target.value } })} />
+                  <input placeholder="Prénom" disabled={isRealChef} value={draft.tutor?.prenom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), prenom: e.target.value } })} />
+                  <input placeholder="Nom" disabled={isRealChef} value={draft.tutor?.nom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), nom: e.target.value } })} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <input placeholder="CIN (lettres)" disabled={isChefRole} value={(draft.tutor as any)?.cinLetters || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" maxLength={2} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinLetters: e.target.value } })} />
-                  <input placeholder="CIN (chiffres)" disabled={isChefRole} value={(draft.tutor as any)?.cinDigits || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" inputMode="numeric" pattern="[0-9]*" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinDigits: e.target.value } })} />
+                  <input placeholder="CIN (lettres)" disabled={isRealChef} value={(draft.tutor as any)?.cinLetters || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" maxLength={2} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinLetters: e.target.value } })} />
+                  <input placeholder="CIN (chiffres)" disabled={isRealChef} value={(draft.tutor as any)?.cinDigits || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" inputMode="numeric" pattern="[0-9]*" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinDigits: e.target.value } })} />
                 </div>
-                <input placeholder="Téléphone" inputMode="tel" type="tel" disabled={isChefRole} value={draft.tutor?.phone || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
+                <input placeholder="Téléphone" inputMode="tel" type="tel" disabled={isRealChef} value={draft.tutor?.phone || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
               </div>
             </div>
           )}
