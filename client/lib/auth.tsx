@@ -50,8 +50,12 @@ export const currentUser: User & { dob?: string } = {
 };
 
 export function useAuth() {
-  // lightweight hook - in a real app this would come from context and async fetch
-  const user = currentUser as any;
+  // lightweight hook - prefer stored user in localStorage when present
+  let stored: string | null = null;
+  try {
+    stored = typeof window !== 'undefined' ? localStorage.getItem('shm_user') : null;
+  } catch (e) { stored = null; }
+  const user = (stored ? JSON.parse(stored) : currentUser) as any;
 
   function hasPermission(name: string) {
     return !!(user.permissions || []).includes(name) || user.role === name || user.external_code === name;
