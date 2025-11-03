@@ -230,8 +230,8 @@ export default function Register() {
         <div className="rounded-2xl bg-white/70 shadow-sm ring-1 ring-black/5 p-6 md:p-8">
           <div className="mb-4 flex items-baseline justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Créer un compte</h1>
-              <p className="text-slate-600 mt-1">Étape {step} de 4</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{t('create_account')}</h1>
+              <p className="text-slate-600 mt-1">{t('step_of', { step, total: 4 })}</p>
             </div>
           </div>
 
