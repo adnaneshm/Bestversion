@@ -33,6 +33,7 @@ export default function Register() {
 
   const maxStep = 3; // always three steps: compte, perso, tuteur
 
+  const MIN_BIRTH_YEAR = 1900;
   function isValidDob(dob?: string) {
     if (!dob) return false;
     const parts = dob.split("-");
@@ -43,7 +44,11 @@ export default function Register() {
     if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) return false;
     const now = new Date();
     const currentYear = now.getFullYear();
-    if (year < 1900 || year > currentYear) return false;
+    const maxYear = currentYear;
+    if (year < MIN_BIRTH_YEAR || year > maxYear) {
+      console.debug('DOB out of range', { year, min: MIN_BIRTH_YEAR, max: maxYear });
+      return false;
+    }
     const d = new Date(year, month - 1, day);
     return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day;
   }
