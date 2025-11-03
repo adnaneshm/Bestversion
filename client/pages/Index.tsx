@@ -15,17 +15,17 @@ export default function Index() {
           <div className="grid gap-6">
             <RoleCard
               emoji="✨"
-              title="Membre"
+              title={t('member') as string}
               desc="Accès aux ressources et activités du scoutisme"
-              cta="Continuer en tant que Membre"
+              cta={t('member_cta') as string}
               href="/categories"
               gradient="from-blue-500 to-blue-600"
             />
             <RoleCard
               emoji="📯"
-              title="Chef"
+              title={t('chef') as string}
               desc="Gestion d'équipe, validation des rapports et modération"
-              cta="Continuer en tant que Chef"
+              cta={t('chef_cta') as string}
               href="/connexion"
               gradient="from-slate-700 to-slate-800"
             />
