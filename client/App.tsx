@@ -28,6 +28,7 @@ import Idees from "./pages/Idees";
 import Membres from "./pages/Membres";
 import Activites from "./pages/Activites";
 import Support from "./pages/Support";
+import Chefs from "./pages/Chefs";
 
 const queryClient = new QueryClient();
 
