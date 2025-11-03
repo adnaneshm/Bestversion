@@ -34,10 +34,10 @@ export default function CompteChef() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-slate-500">Prénom</p>
-                <p className="font-medium">{(user.name || "").split(" ")[0] || "—"}</p>
+                <p className="font-medium">{(user as any).prenom || firstName || "—"}</p>
 
                 <p className="text-sm text-slate-500 mt-3">Nom</p>
-                <p className="font-medium">{(user.name || "").split(" ").slice(1).join(" ") || "—"}</p>
+                <p className="font-medium">{(user as any).nom || lastName || "—"}</p>
 
                 <p className="text-sm text-slate-500 mt-3">Rôle</p>
                 <p className="font-medium">{user.role || "—"}</p>
