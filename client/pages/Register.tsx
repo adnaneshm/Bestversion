@@ -11,17 +11,8 @@ type Draft = {
   dob: string;
   phone?: string;
   address?: string;
-  role?: string;
-  niche_id?: string;
-  niches?: string[];
-  niche_superieure?: boolean;
   tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
 };
-
-const REAL_CHEF_ROLES = ["sous_chef", "chef_superieur"]; // real chefs
-const NICKNAME_CHEF_ROLE = "chef_niche"; // nickname-only role
-// compatibility alias for older code
-const CHEF_ROLES = [...REAL_CHEF_ROLES, NICKNAME_CHEF_ROLE];
 
 function generateRandomNumber() {
   return Math.floor(Math.random() * 9999) + 1;
@@ -32,20 +23,14 @@ function formatId(prefix: string) {
 }
 
 export default function Register() {
-  const paramsInit = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
-  const initialCategory = paramsInit.get('category') || undefined;
-
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft & { role?: string; niche_id?: string }>({ id: initialCategory ? formatId(initialCategory.toUpperCase()) : formatId('E'), prenom: "", nom: "", password: "", dob: "", role: "membre", niche_id: "default", niches: [], niche_superieure: false });
+  const [draft, setDraft] = useState<Draft>({ id: formatId('E'), prenom: "", nom: "", password: "", dob: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
-  const fromMainChefs = !!(paramsInit.get('from') === 'chefs' || paramsInit.get('origin') === 'chefs' || paramsInit.get('source') === 'chefs');
-  const isRealChef = REAL_CHEF_ROLES.includes(draft.role || "") || fromMainChefs;
-  const isNicknameChef = (draft.role || "") === NICKNAME_CHEF_ROLE;
   const maxStep = 3; // always three steps: compte, perso, tuteur
 
   function isValidDob(dob?: string) {
