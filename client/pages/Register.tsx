@@ -63,7 +63,7 @@ export default function Register() {
     }
     if (step === 2) {
       if (!isValidDob(draft.dob)) {
-        setError('Date de naissance invalide. Veuillez vérifier le jour, le mois et l��année.');
+        setError(t('dob_invalid'));
         return;
       }
     }
