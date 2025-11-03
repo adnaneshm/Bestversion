@@ -100,8 +100,8 @@ export default function Register() {
     }
     const now = new Date();
     const currentYear = now.getFullYear();
-    const minYear = currentYear - 18;
-    const maxYear = currentYear;
+    const minYear = 1941;
+    const maxYear = currentYear - 1;
     if (!isValidDobRange(draft.dob, minYear, maxYear)) {
       setError(`${t('dob_invalid')} (${minYear} - ${maxYear})`);
       return;
