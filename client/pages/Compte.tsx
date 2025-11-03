@@ -37,11 +37,16 @@ export default function Compte() {
     return age;
   }
 
+  const firstName = (user as any).prenom || (user.name || '').split(' ')[0] || '';
+  const lastName = (user as any).nom || (user.name || '').split(' ').slice(1).join(' ') || '';
+  const displayName = firstName && lastName ? `${firstName} ${lastName}` : (user.name || '');
+  const isChef = String(user.role || '').toLowerCase().includes('chef') || String(user.niche_id || '').toLowerCase().includes('chef') || (typeof window !== 'undefined' && window.location.pathname.includes('compte-chef'));
+
   return (
     <AuthenticatedLayout>
       <section>
         <h1 className="text-2xl font-bold">Mon Espace Compte</h1>
-        <p className="mt-2 text-sm text-slate-700">Bienvenue, {user.name}</p>
+        <p className="mt-2 text-sm text-slate-700">Bienvenue, {displayName}</p>
 
         {/* Full profile card */}
         <div className="mt-6">
