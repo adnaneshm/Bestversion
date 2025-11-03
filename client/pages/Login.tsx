@@ -85,6 +85,9 @@ export default function Login() {
             <p className="mt-2">
               <a className="text-violet-700" href="#">{t('forgot_password')}</a>
             </p>
+            <div className="mt-4">
+              <a href="/register" className="inline-block w-full text-center px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700">{t('register_button')}</a>
+            </div>
           </div>
         </div>
       </section>
