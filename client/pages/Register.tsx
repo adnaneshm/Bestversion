@@ -69,9 +69,9 @@ export default function Register() {
     if (step === 2) {
       const now = new Date();
       const currentYear = now.getFullYear();
-      // Members must be born between (currentYear - 18) and currentYear (inclusive)
-      const minYear = currentYear - 18;
-      const maxYear = currentYear;
+      // Require birth year > 1940 and < current year
+      const minYear = 1941;
+      const maxYear = currentYear - 1;
       if (!isValidDobRange(draft.dob, minYear, maxYear)) {
         setError(`${t('dob_invalid')} (${minYear} - ${maxYear})`);
         return;
