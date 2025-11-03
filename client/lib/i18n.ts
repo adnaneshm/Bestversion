@@ -46,7 +46,10 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
       chef_superieur: 'Chef supérieur'
     },
     chefs_title: 'Chefs',
-    chefs_subtitle: 'Liste et évaluations des chefs.'
+    chefs_subtitle: 'Liste et évaluations des chefs.',
+    niche_sup_label: 'Niche supérieure',
+    niche_super_label: 'Niche Supérieure',
+    niche_principale: 'Niche principale'
   },
   ar: {
     welcome_title: 'مرحبا بكم في بوابة SHM',
@@ -60,7 +63,7 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
     tutor: 'الوكيل/الولي',
     dob_invalid: 'تاريخ الميلاد غير صالح.',
     dob_label: 'تاريخ الميلاد',
-    required_fields: 'حقول إجبارية مفقودة: {fields}',
+    required_fields: 'حقول إجبارية مفقو��ة: {fields}',
     fill_all_fields: 'المرجو تعبئة جميع الحقول.',
     passwords_mismatch: 'كلمتا المرور غير متطابقتين.',
     created_success: 'تم إنشاء الحساب بنجاح',
