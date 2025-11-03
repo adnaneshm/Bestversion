@@ -37,7 +37,15 @@ export default function Login() {
         return;
       }
 
-      // success
+      // success: try to persist returned user info for account page
+      try {
+        const json = parsed || JSON.parse(txt || '{}');
+        const userObj = json.user || json;
+        if (userObj && typeof window !== 'undefined') {
+          try { localStorage.setItem('shm_user', JSON.stringify(userObj)); } catch (e) { /* ignore */ }
+        }
+      } catch (e) {}
+
       window.location.href = "/compte";
     } catch (err: any) {
       setError(err?.message || "Network error");
