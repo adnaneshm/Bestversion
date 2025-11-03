@@ -9,9 +9,9 @@ type Draft = {
   nom: string;
   password: string;
   dob: string;
+  cin?: string;
   phone?: string;
   address?: string;
-  tutor?: { type?: string; prenom?: string; nom?: string; cin?: string; phone?: string };
 };
 
 function generateRandomNumber() {
@@ -24,14 +24,14 @@ function formatId(prefix: string) {
 
 export default function Register() {
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft>({ id: formatId('E'), prenom: "", nom: "", password: "", dob: "" });
+  const [draft, setDraft] = useState<Draft>({ id: formatId('E'), prenom: "", nom: "", password: "", dob: "", cin: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
-  const maxStep = 3; // always three steps: compte, perso, tuteur
+  const maxStep = 2; // two steps: compte, perso (tuteur removed)
 
   function isValidDobRange(dob?: string, minYear?: number, maxYear?: number) {
     if (!dob) return false;
@@ -94,6 +94,7 @@ export default function Register() {
     if (!draft.prenom) missingBasics.push('Prénom');
     if (!draft.nom) missingBasics.push('Nom');
     if (!draft.password) missingBasics.push('Mot de passe');
+    if (!(draft as any).cin) missingBasics.push('CIN');
     if (missingBasics.length) {
       setError(`Informations incomplètes: ${missingBasics.join(', ')}`);
       return;
@@ -114,38 +115,17 @@ export default function Register() {
       return;
     }
 
-    // Require tutor info (always)
-    {
-      const t = draft.tutor || {};
-      const missingTutor = [] as string[];
-      if (!t.prenom) missingTutor.push('Prénom tuteur');
-      if (!t.nom) missingTutor.push('Nom tuteur');
-      if (!t.phone) missingTutor.push('Téléphone tuteur');
-      if (missingTutor.length) {
-        setError(`Informations tuteur manquantes: ${missingTutor.join(', ')}`);
-        return;
-      }
-    }
 
     try {
-      const tutor = draft.tutor ? { ...draft.tutor } : undefined;
-      if (tutor) {
-        const letters = (tutor as any).cinLetters || "";
-        const digits = (tutor as any).cinDigits || "";
-        (tutor as any).cin = letters + digits;
-        delete (tutor as any).cinLetters;
-        delete (tutor as any).cinDigits;
-      }
-
       const payload = {
         id: draft.id,
         prenom: draft.prenom,
         nom: draft.nom,
         password: draft.password,
         dob: draft.dob || null,
+        cin: (draft as any).cin || null,
         phone: draft.phone || null,
         address: draft.address || null,
-        tutor: tutor || undefined,
       };
 
       setLoading(true);
@@ -209,7 +189,7 @@ export default function Register() {
           <div className="mb-4 flex items-baseline justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{t('create_account')}</h1>
-              <p className="text-slate-600 mt-1">{t('step_of', { step, total: 4 })}</p>
+              <p className="text-slate-600 mt-1">{t('step_of', { step, total: maxStep })}</p>
             </div>
           </div>
 
@@ -256,36 +236,14 @@ export default function Register() {
                   </select>
                   <input type="number" placeholder="Année" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ dob: `${String(e.target.value)}-${draft.dob.split('-')[1] || ''}-${draft.dob.split('-')[2] || ''}` })} />
                 </div>
+                <input placeholder="CIN" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ cin: e.target.value })} />
                 <input placeholder="Téléphone personnel" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ phone: e.target.value })} />
                 <input placeholder="Adresse" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ address: e.target.value })} />
               </div>
             </div>
           )}
 
-          {step === 3 && (
-            <div>
-              <h3 className="font-semibold text-lg mb-3">{t('tutor')}</h3>
-
-              <div className="grid gap-3">
-                <select className="h-11 rounded-md border border-slate-200 bg-white px-3" value={draft.tutor?.type || ""} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), type: e.target.value } })}>
-                  <option value="">Type de tuteur</option>
-                  <option>Père</option>
-                  <option>Mère</option>
-                  <option>Autre</option>
-                </select>
-                <div className="grid grid-cols-2 gap-2">
-                  <input placeholder="Prénom" value={draft.tutor?.prenom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), prenom: e.target.value } })} />
-                  <input placeholder="Nom" value={draft.tutor?.nom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), nom: e.target.value } })} />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <input placeholder="CIN (lettres)" value={(draft.tutor as any)?.cinLetters || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" maxLength={2} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinLetters: e.target.value } })} />
-                  <input placeholder="CIN (chiffres)" value={(draft.tutor as any)?.cinDigits || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" inputMode="numeric" pattern="[0-9]*" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinDigits: e.target.value } })} />
-                </div>
-                <input placeholder="Téléphone" inputMode="tel" type="tel" value={draft.tutor?.phone || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
-              </div>
-            </div>
-          )}
-
+          
           <div className="flex items-center justify-between gap-4 pt-4">
             <a href="/connexion" className="text-slate-600 hover:text-slate-900">Déjà un compte? Se connecter</a>
             <div className="flex items-center gap-3">
