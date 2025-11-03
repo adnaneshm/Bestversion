@@ -301,9 +301,7 @@ export default function Register() {
               <h3 className="font-semibold text-lg mb-3">Tuteur</h3>
 
               {isNicknameChef && (
-                <div className="p-3 bg-red-50 rounded mb-3">
-                  <p className="text-sm">Attention — «Chef de niches» est un surnom. Vous devez renseigner les informations du tuteur.</p>
-                </div>
+                <div className="p-3 bg-red-50 rounded mb-3" />
               )}
 
               {isRealChef && !isNicknameChef && (
