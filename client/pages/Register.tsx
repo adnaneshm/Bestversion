@@ -89,7 +89,7 @@ export default function Register() {
       return;
     }
     if (!isValidDob(draft.dob)) {
-      setError('Date de naissance invalide.');
+      setError(t('dob_invalid'));
       return;
     }
     const missingContact = [] as string[];
