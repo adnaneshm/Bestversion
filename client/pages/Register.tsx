@@ -250,42 +250,44 @@ export default function Register() {
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">Rôle / Niche</label>
+                <label className="text-sm font-medium text-slate-700">Rôle</label>
                 <select value={draft.role} onChange={(e) => {
                   const role = e.target.value;
-                  let niche_id = "default";
-                  if (role === "chef_niche") niche_id = "aya";
-                  if (role === "sous_chef") niche_id = "kechaf";
-                  if (role === "chef_superieur") niche_id = "vvsuper";
-                  if (role === "membre") niche_id = "default";
-                  update({ role, niche_id });
+                  // If role is not member, remove niche selection
+                  if (role !== 'membre') {
+                    update({ role, niche_id: '' , niche_superieure: false });
+                  } else {
+                    update({ role, niche_id: 'default' });
+                  }
                 }} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
-                  <option value="membre">Membre (par défaut)</option>
-                  <option value="chef_niche">Chef de niches</option>
-                  <option value="sous_chef">Sous-chef</option>
-                  <option value="chef_superieur">Chef supérieur</option>
+                  <option value="membre">{tRoles()['membre']}</option>
+                  <option value="chef_niche">{tRoles()['chef_niche']}</option>
+                  <option value="sous_chef">{tRoles()['sous_chef']}</option>
+                  <option value="chef_superieur">{tRoles()['chef_superieur']}</option>
                 </select>
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">Mot de passe</label>
+                <label className="text-sm font-medium text-slate-700">{t('password_label')}</label>
                 <input value={draft.password} type="password" onChange={(e) => update({ password: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
               </div>
 
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">Niche supérieure</label>
-                <label className="inline-flex items-center gap-2"><input type="checkbox" checked={!!draft.niche_superieure} onChange={(e) => update({ niche_superieure: e.target.checked })} /> Niche Supérieure</label>
+              { (draft.role || '') === 'membre' && (
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium text-slate-700">{t('niche_sup_label') || 'Niche supérieure'}</label>
+                  <label className="inline-flex items-center gap-2"><input type="checkbox" checked={!!draft.niche_superieure} onChange={(e) => update({ niche_superieure: e.target.checked })} /> {t('niche_super_label') || 'Niche Supérieure'}</label>
 
-                <label className="text-sm font-medium text-slate-700 mt-2">Niche principale</label>
-                <select value={draft.niche_id} onChange={(e) => update({ niche_id: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
-                  <option value="">(sans niche)</option>
-                  <option value="actualites">Actualités</option>
-                  <option value="organisation">Organisation</option>
-                  <option value="projet">Projet</option>
-                  <option value="rapports">Rapports</option>
-                  <option value="lois">Lois</option>
-                </select>
-              </div>
+                  <label className="text-sm font-medium text-slate-700 mt-2">{t('niche_principale') || 'Niche principale'}</label>
+                  <select value={draft.niche_id} onChange={(e) => update({ niche_id: e.target.value })} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none">
+                    <option value="">{t('niche_sans')}</option>
+                    <option value="actualites">{tNiches().actualites}</option>
+                    <option value="organisation">{tNiches().organisation}</option>
+                    <option value="projet">{tNiches().projet}</option>
+                    <option value="rapports">{tNiches().rapports}</option>
+                    <option value="lois">{tNiches().lois}</option>
+                  </select>
+                </div>
+              ) }
             </div>
           )}
 
