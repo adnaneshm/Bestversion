@@ -14,11 +14,37 @@ export default function RegisterChef() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  function isValidDobRange(dob?: string, minYear?: number, maxYear?: number) {
+    if (!dob) return false;
+    const parts = dob.split("-");
+    if (parts.length !== 3) return false;
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+    if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) return false;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const minY = typeof minYear === 'number' ? minYear : 1900;
+    const maxY = typeof maxYear === 'number' ? maxYear : currentYear;
+    if (year < minY || year > maxY) return false;
+    const d = new Date(year, month - 1, day);
+    return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day;
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     if (!prenom || !nom || !dob || !cin || !password || !confirm) {
       return setError(t('fill_all_fields'));
+    }
+    // Chef DOB must be between 1950 and (currentYear - 18)
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const minYear = 1950;
+    const maxYear = currentYear - 18;
+    if (!isValidDobRange(dob, minYear, maxYear)) {
+      setError(`${t('dob_invalid')} (${minYear} - ${maxYear})`);
+      return;
     }
     if (password !== confirm) return setError(t('passwords_mismatch'));
 
