@@ -224,7 +224,7 @@ export default function Register() {
               <h3 className="font-semibold text-lg mb-3">Informations personnelles</h3>
               <div className="grid gap-3">
                 <div className="grid grid-cols-3 gap-2">
-                  <input type="number" placeholder="Jour" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ dob: `${e.target.value}-${draft.dob.split('-').slice(1).join('-')}` })} />
+                  <input type="number" placeholder="Jour" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ dob: `${draft.dob.split('-')[0] || ''}-${draft.dob.split('-')[1] || ''}-${String(e.target.value).padStart(2,'0')}` })} />
                   <select className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ dob: `${draft.dob.split('-')[0] || ''}-${String(e.target.value).padStart(2,'0')}-${draft.dob.split('-')[2] || ''}` })}>
                     <option value="">Mois</option>
                     <option value="01">Janvier</option>
@@ -240,7 +240,7 @@ export default function Register() {
                     <option value="11">Novembre</option>
                     <option value="12">Décembre</option>
                   </select>
-                  <input type="number" placeholder="Année" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ dob: `${draft.dob.split('-').slice(0,2).join('-')}-${e.target.value}` })} />
+                  <input type="number" placeholder="Année" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ dob: `${String(e.target.value)}-${draft.dob.split('-')[1] || ''}-${draft.dob.split('-')[2] || ''}` })} />
                 </div>
                 <input placeholder="Téléphone personnel" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ phone: e.target.value })} />
                 <input placeholder="Adresse" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ address: e.target.value })} />
