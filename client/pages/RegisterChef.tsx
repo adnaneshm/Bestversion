@@ -91,23 +91,23 @@ export default function RegisterChef() {
           <form className="grid gap-4" onSubmit={submit}>
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">{t('roles')['prenom'] || 'Prénom'}</label>
+                <label className="text-sm font-medium text-slate-700">{t('first_name')}</label>
                 <input value={prenom} onChange={(e) => setPrenom(e.target.value)} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
               </div>
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">{t('roles')['nom'] || 'Nom'}</label>
+                <label className="text-sm font-medium text-slate-700">{t('last_name')}</label>
                 <input value={nom} onChange={(e) => setNom(e.target.value)} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
               </div>
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-slate-700">{t('dob_invalid') /* label reuse for DOB */}</label>
+              <label className="text-sm font-medium text-slate-700">{t('dob_label')}</label>
               <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-slate-700">CIN</label>
-              <input value={cin} onChange={(e) => setCin(e.target.value)} placeholder="CIN" className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+              <label className="text-sm font-medium text-slate-700">{t('cin')}</label>
+              <input value={cin} onChange={(e) => setCin(e.target.value)} placeholder={t('cin')} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
             </div>
 
             <div className="grid gap-2">
@@ -121,17 +121,17 @@ export default function RegisterChef() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">{t('password') || 'Mot de passe'}</label>
+                <label className="text-sm font-medium text-slate-700">{t('password_label')}</label>
                 <input value={password} type="password" onChange={(e) => setPassword(e.target.value)} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
               </div>
               <div className="grid gap-2">
-                <label className="text-sm font-medium text-slate-700">{t('confirm_password') || 'Confirmer le mot de passe'}</label>
+                <label className="text-sm font-medium text-slate-700">{t('confirm_password')}</label>
                 <input value={confirm} type="password" onChange={(e) => setConfirm(e.target.value)} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
               </div>
             </div>
 
             <div className="flex items-center justify-end">
-              <Button className="bg-violet-600 hover:bg-violet-700" disabled={loading}>{loading ? 'Enregistrement…' : 'Créer le compte'}</Button>
+              <Button className="bg-violet-600 hover:bg-violet-700" disabled={loading}>{loading ? t('registering') : t('register_button')}</Button>
             </div>
           </form>
         </div>
