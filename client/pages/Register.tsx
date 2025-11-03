@@ -114,9 +114,6 @@ export default function Register() {
     }
 
     try {
-      const params = new URLSearchParams(window.location.search);
-      const category = params.get("category") || undefined;
-
       const tutor = draft.tutor ? { ...draft.tutor } : undefined;
       if (tutor) {
         const letters = (tutor as any).cinLetters || "";
@@ -126,32 +123,15 @@ export default function Register() {
         delete (tutor as any).cinDigits;
       }
 
-      const isChef = isRealChef; // compatibility
-      const finalTutor = isChef ? undefined : tutor;
-
-      // Ensure id prefix matches category if provided
-      let finalId = draft.id;
-      if (category) {
-        const pref = category.toUpperCase();
-        if (!finalId || finalId[0] !== pref) {
-          finalId = formatId(pref);
-        }
-      }
-
       const payload = {
-        id: finalId,
+        id: draft.id,
         prenom: draft.prenom,
         nom: draft.nom,
         password: draft.password,
         dob: draft.dob || null,
         phone: draft.phone || null,
         address: draft.address || null,
-        role: (draft as any).role || null,
-        niche_id: (draft as any).niche_id || null,
-        niches: draft.niches || [],
-        niche_superieure: draft.niche_superieure || false,
-        category,
-        tutor: finalTutor,
+        tutor: tutor || undefined,
       };
 
       setLoading(true);
