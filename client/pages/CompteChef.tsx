@@ -17,11 +17,15 @@ export default function CompteChef() {
     return age;
   }
 
+  const firstName = (user as any).prenom || (user.name || '').split(' ')[0] || '';
+  const lastName = (user as any).nom || (user.name || '').split(' ').slice(1).join(' ') || '';
+  const displayName = firstName && lastName ? `${firstName} ${lastName}` : (user.name || '');
+
   return (
     <AuthenticatedLayout>
       <section>
         <h1 className="text-2xl font-bold">Espace Chef</h1>
-        <p className="mt-2 text-sm text-slate-700">Bienvenue, {user.name}</p>
+        <p className="mt-2 text-sm text-slate-700">Bienvenue, {displayName}</p>
 
         <div className="mt-6">
           <div className="rounded-lg bg-white p-6 shadow">
