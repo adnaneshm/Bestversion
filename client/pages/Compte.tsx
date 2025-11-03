@@ -80,22 +80,24 @@ export default function Compte() {
                 <p className="font-medium">{((user as any).phone) || '—'}</p>
               </div>
 
-              <div>
-                <h3 className="text-sm text-slate-500">Tuteur</h3>
-                <div className="mt-2">
-                  <p className="text-sm text-slate-500">Prénom</p>
-                  <p className="font-medium">{((user as any).tutor?.prenom) || '—'}</p>
+              {!isChef && (
+                <div>
+                  <h3 className="text-sm text-slate-500">Tuteur</h3>
+                  <div className="mt-2">
+                    <p className="text-sm text-slate-500">Prénom</p>
+                    <p className="font-medium">{((user as any).tutor?.prenom) || '—'}</p>
 
-                  <p className="text-sm text-slate-500 mt-3">Nom</p>
-                  <p className="font-medium">{((user as any).tutor?.nom) || '—'}</p>
+                    <p className="text-sm text-slate-500 mt-3">Nom</p>
+                    <p className="font-medium">{((user as any).tutor?.nom) || '—'}</p>
 
-                  <p className="text-sm text-slate-500 mt-3">Type</p>
-                  <p className="font-medium">{((user as any).tutor?.type) || '—'}</p>
+                    <p className="text-sm text-slate-500 mt-3">Type</p>
+                    <p className="font-medium">{((user as any).tutor?.type) || '—'}</p>
 
-                  <p className="text-sm text-slate-500 mt-3">Téléphone (tuteur)</p>
-                  <p className="font-medium">{((user as any).tutor?.phone) || '—'}</p>
+                    <p className="text-sm text-slate-500 mt-3">Téléphone (tuteur)</p>
+                    <p className="font-medium">{((user as any).tutor?.phone) || '—'}</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
