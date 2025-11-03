@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import MainLayout from "@/components/layout/MainLayout";
 import { useEffect, useState } from "react";
-import { t, tNiches, tRoles } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 
 type Draft = {
   id: string;
