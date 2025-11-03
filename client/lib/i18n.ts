@@ -56,7 +56,7 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
     create_account: 'إنشاء حساب',
     step_of: 'المرحلة {step} من {total}',
     tutor: 'الوكيل/الولي',
-    dob_invalid: 'تاريخ الم��لاد غير صالح.',
+    dob_invalid: 'تاريخ الميلاد غير صالح.',
     dob_label: 'تاريخ الميلاد',
     required_fields: 'حقول إجبارية مفقودة: {fields}',
     fill_all_fields: 'المرجو تعبئة جميع الحقول.',
