@@ -18,9 +18,9 @@ export default function RegisterChef() {
     e.preventDefault();
     setError(null);
     if (!prenom || !nom || !dob || !cin || !password || !confirm) {
-      return setError("Veuillez remplir tous les champs.");
+      return setError(t('fill_all_fields'));
     }
-    if (password !== confirm) return setError("Les mots de passe ne correspondent pas.");
+    if (password !== confirm) return setError(t('passwords_mismatch'));
 
     setLoading(true);
     try {
