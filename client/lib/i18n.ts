@@ -44,7 +44,9 @@ const translations: Record<Lang, Record<string, string | Record<string,string>>>
       chef_niche: 'Chef de niches',
       sous_chef: 'Sous-chef',
       chef_superieur: 'Chef supérieur'
-    }
+    },
+    chefs_title: 'Chefs',
+    chefs_subtitle: 'Liste et évaluations des chefs.'
   },
   ar: {
     welcome_title: 'مرحبا بكم في بوابة SHM',
