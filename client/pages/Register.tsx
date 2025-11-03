@@ -63,45 +63,66 @@ export default function Register() {
   }
 
   function next() {
-    // invisible validation: do not show messages, just prevent navigation
+    // visible validation: show messages in UI
+    setError(null);
     if (step === 1) {
-      if (!draft.prenom || !draft.nom || !draft.password) {
-        console.warn('step1 validation failed');
+      const missing = [] as string[];
+      if (!draft.prenom) missing.push('Prénom');
+      if (!draft.nom) missing.push('Nom');
+      if (!draft.password) missing.push('Mot de passe');
+      if (missing.length) {
+        setError(`Champ(s) obligatoires manquant(s) : ${missing.join(', ')}`);
         return;
       }
     }
     if (step === 2) {
       if (!isValidDob(draft.dob)) {
-        console.warn('invalid dob', draft.dob);
+        setError('Date de naissance invalide. Veuillez vérifier le jour, le mois et l’année.');
         return;
       }
     }
+    setError(null);
     setStep((s) => Math.min(maxStep, s + 1));
   }
 
   function prev() {
+    setError(null);
     setStep((s) => Math.max(1, s - 1));
   }
 
   async function finish() {
-    // invisible validation for required fields (all required except niche_superieure)
-    if (!draft.id || !draft.prenom || !draft.nom || !draft.password) {
-      console.warn('missing basic fields');
+    // visible validation for required fields (all required except niche_superieure)
+    setError(null);
+    const missingBasics = [] as string[];
+    if (!draft.id) missingBasics.push('ID');
+    if (!draft.prenom) missingBasics.push('Prénom');
+    if (!draft.nom) missingBasics.push('Nom');
+    if (!draft.password) missingBasics.push('Mot de passe');
+    if (missingBasics.length) {
+      setError(`Informations incomplètes: ${missingBasics.join(', ')}`);
       return;
     }
     if (!isValidDob(draft.dob)) {
-      console.warn('invalid dob at finish', draft.dob);
+      setError('Date de naissance invalide.');
       return;
     }
-    if (!draft.phone || !draft.address) {
-      console.warn('missing contact/address');
+    const missingContact = [] as string[];
+    if (!draft.phone) missingContact.push('Téléphone');
+    if (!draft.address) missingContact.push('Adresse');
+    if (missingContact.length) {
+      setError(`Veuillez renseigner : ${missingContact.join(', ')}`);
       return;
     }
 
     // If role is not a real chef, require tutor info
     if (!isRealChef) {
-      if (!draft.tutor || !draft.tutor.prenom || !draft.tutor.nom || !draft.tutor.phone) {
-        console.warn('missing tutor info');
+      const t = draft.tutor || {};
+      const missingTutor = [] as string[];
+      if (!t.prenom) missingTutor.push('Prénom tuteur');
+      if (!t.nom) missingTutor.push('Nom tuteur');
+      if (!t.phone) missingTutor.push('Téléphone tuteur');
+      if (missingTutor.length) {
+        setError(`Informations tuteur manquantes: ${missingTutor.join(', ')}`);
         return;
       }
     }
