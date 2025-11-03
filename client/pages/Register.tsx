@@ -254,32 +254,22 @@ export default function Register() {
             <div>
               <h3 className="font-semibold text-lg mb-3">{t('tutor')}</h3>
 
-              {isNicknameChef && (
-                <div className="p-3 bg-red-50 rounded mb-3" />
-              )}
-
-              {isRealChef && !isNicknameChef && (
-                <div className="p-3 bg-yellow-50 rounded mb-3">
-                  <p className="text-sm">Vous avez sélectionné un rôle de chef via la section principale — le tuteur est optionnel. Les champs sont désactivés par défaut.</p>
-                </div>
-              )}
-
               <div className="grid gap-3">
-                <select className="h-11 rounded-md border border-slate-200 bg-white px-3" disabled={isRealChef} value={draft.tutor?.type || ""} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), type: e.target.value } })}>
+                <select className="h-11 rounded-md border border-slate-200 bg-white px-3" value={draft.tutor?.type || ""} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), type: e.target.value } })}>
                   <option value="">Type de tuteur</option>
                   <option>Père</option>
                   <option>Mère</option>
                   <option>Autre</option>
                 </select>
                 <div className="grid grid-cols-2 gap-2">
-                  <input placeholder="Prénom" disabled={isRealChef} value={draft.tutor?.prenom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), prenom: e.target.value } })} />
-                  <input placeholder="Nom" disabled={isRealChef} value={draft.tutor?.nom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), nom: e.target.value } })} />
+                  <input placeholder="Prénom" value={draft.tutor?.prenom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), prenom: e.target.value } })} />
+                  <input placeholder="Nom" value={draft.tutor?.nom || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), nom: e.target.value } })} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <input placeholder="CIN (lettres)" disabled={isRealChef} value={(draft.tutor as any)?.cinLetters || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" maxLength={2} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinLetters: e.target.value } })} />
-                  <input placeholder="CIN (chiffres)" disabled={isRealChef} value={(draft.tutor as any)?.cinDigits || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" inputMode="numeric" pattern="[0-9]*" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinDigits: e.target.value } })} />
+                  <input placeholder="CIN (lettres)" value={(draft.tutor as any)?.cinLetters || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" maxLength={2} onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinLetters: e.target.value } })} />
+                  <input placeholder="CIN (chiffres)" value={(draft.tutor as any)?.cinDigits || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" inputMode="numeric" pattern="[0-9]*" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), cinDigits: e.target.value } })} />
                 </div>
-                <input placeholder="Téléphone" inputMode="tel" type="tel" disabled={isRealChef} value={draft.tutor?.phone || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
+                <input placeholder="Téléphone" inputMode="tel" type="tel" value={draft.tutor?.phone || ""} className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft.tutor || {}), phone: e.target.value } })} />
               </div>
             </div>
           )}
