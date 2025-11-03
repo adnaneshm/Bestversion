@@ -67,8 +67,13 @@ export default function Register() {
       }
     }
     if (step === 2) {
-      if (!isValidDob(draft.dob)) {
-        setError(t('dob_invalid'));
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      // Members must be born between (currentYear - 18) and currentYear (inclusive)
+      const minYear = currentYear - 18;
+      const maxYear = currentYear;
+      if (!isValidDobRange(draft.dob, minYear, maxYear)) {
+        setError(`${t('dob_invalid')} (${minYear} - ${maxYear})`);
         return;
       }
     }
