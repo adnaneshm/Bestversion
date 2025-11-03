@@ -37,11 +37,11 @@ export default function RegisterChef() {
     if (!prenom || !nom || !dob || !cin || !password || !confirm) {
       return setError(t('fill_all_fields'));
     }
-    // Chef DOB must be between 1950 and (currentYear - 18)
+    // DOB must be > 1940 and < current year
     const now = new Date();
     const currentYear = now.getFullYear();
-    const minYear = 1950;
-    const maxYear = currentYear - 18;
+    const minYear = 1941;
+    const maxYear = currentYear - 1;
     if (!isValidDobRange(dob, minYear, maxYear)) {
       setError(`${t('dob_invalid')} (${minYear} - ${maxYear})`);
       return;
