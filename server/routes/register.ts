@@ -18,7 +18,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
       return res.status(500).json({ error: "Supabase configuration missing on server." });
     }
 
-    const {
+    let {
       id,
       prenom,
       nom,
@@ -30,6 +30,53 @@ export const handleRegister: RequestHandler = async (req, res) => {
       role, // optional role code string
       niche_id // optional niche id
     } = req.body as Record<string, any>;
+
+    // If id not provided, generate one server-side and ensure uniqueness across app_users/users
+    function randomNumber() {
+      return Math.floor(Math.random() * 9999) + 1;
+    }
+    function genId() {
+      const prefixes = ['Z','A','B','C','D','E','F','G','H','X'];
+      const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+      return `${p}${String(randomNumber()).padStart(4, '0')}`;
+    }
+
+    async function idExists(idVal: string) {
+      const urlA = `${supabaseUrl}/rest/v1/app_users?id=eq.${encodeURIComponent(idVal)}&select=id`;
+      const urlB = `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(idVal)}&select=id`;
+      const doGet = async (url: string) => await fetch(url, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+      try {
+        let resp = await doGet(urlA);
+        if (resp.ok) {
+          const arr = await resp.json();
+          if (Array.isArray(arr) && arr.length > 0) return true;
+        }
+        resp = await doGet(urlB);
+        if (resp.ok) {
+          const arr = await resp.json();
+          if (Array.isArray(arr) && arr.length > 0) return true;
+        }
+      } catch (e) {
+        // ignore and assume not exists if error
+      }
+      return false;
+    }
+
+    if (!id) {
+      // try to produce a unique id up to N attempts
+      const MAX_ATTEMPTS = 20;
+      let attempts = 0;
+      let candidate = null;
+      while (attempts < MAX_ATTEMPTS) {
+        candidate = genId();
+        // eslint-disable-next-line no-await-in-loop
+        const exists = await idExists(candidate);
+        if (!exists) break;
+        attempts++;
+      }
+      if (!candidate) return res.status(500).json({ error: 'Failed generating user id' });
+      id = candidate as string;
+    }
 
     if (!id || !prenom || !nom || !password) {
       return res.status(400).json({ error: "Missing required fields" });
