@@ -240,11 +240,31 @@ export default function Register() {
                 </div>
                 <input placeholder="Téléphone personnel" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ phone: e.target.value })} />
                 <input placeholder="Adresse" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ address: e.target.value })} />
+
+                <div className="pt-3 border-t mt-2">
+                  <h4 className="font-medium">Informations du tuteur (si applicable)</h4>
+                  <div className="grid gap-2 mt-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <input placeholder="Prénom tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, prenom: e.target.value } })} />
+                      <input placeholder="Nom tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, nom: e.target.value } })} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input placeholder="CIN tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, cin: e.target.value } })} />
+                      <input placeholder="Téléphone tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, phone: e.target.value } })} />
+                    </div>
+                    <select className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, type: e.target.value } })}>
+                      <option value="">Type tuteur (ex: parent, tuteur)</option>
+                      <option value="parent">Parent</option>
+                      <option value="tuteur">Tuteur</option>
+                    </select>
+                  </div>
+                </div>
+
               </div>
             </div>
           )}
 
-          
+
           <div className="flex items-center justify-between gap-4 pt-4">
             <a href="/connexion" className="text-slate-600 hover:text-slate-900">Déjà un compte? Se connecter</a>
             <div className="flex items-center gap-3">
