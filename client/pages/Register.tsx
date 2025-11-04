@@ -18,13 +18,15 @@ function generateRandomNumber() {
   return Math.floor(Math.random() * 9999) + 1;
 }
 
-function formatId(prefix: string) {
+function generateId() {
+  const prefixes = ['Z','A','B','C','D','E','F','G','H','X'];
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
   return `${prefix}${String(generateRandomNumber()).padStart(4, "0")}`;
 }
 
 export default function Register() {
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft>({ id: formatId('E'), prenom: "", nom: "", password: "", dob: "", cin: "" });
+  const [draft, setDraft] = useState<Draft>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", cin: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
