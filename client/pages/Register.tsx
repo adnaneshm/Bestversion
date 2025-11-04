@@ -119,16 +119,22 @@ export default function Register() {
 
 
     try {
-      const payload = {
+      const payload: Record<string, any> = {
         id: draft.id,
         prenom: draft.prenom,
         nom: draft.nom,
         password: draft.password,
         dob: draft.dob || null,
+        // members should not send cin; only include if present (some legacy cases)
         cin: (draft as any).cin || null,
         phone: draft.phone || null,
         address: draft.address || null,
       };
+
+      // include tutor information if provided
+      if ((draft as any).tutor && typeof (draft as any).tutor === 'object') {
+        payload.tutor = (draft as any).tutor;
+      }
 
       setLoading(true);
       let resp: Response | null = null;
