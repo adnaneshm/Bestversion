@@ -18,15 +18,32 @@ function generateRandomNumber() {
   return Math.floor(Math.random() * 9999) + 1;
 }
 
-function generateId() {
+function generateId(prefix?: string) {
   const prefixes = ['Z','A','B','C','D','E','F','G','H','X'];
-  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  return `${prefix}${String(generateRandomNumber()).padStart(4, "0")}`;
+  let chosen = '';
+  if (prefix && typeof prefix === 'string' && /^[A-Z]$/i.test(prefix)) {
+    chosen = prefix.toUpperCase();
+  } else {
+    chosen = prefixes[Math.floor(Math.random() * prefixes.length)];
+  }
+  return `${chosen}${String(generateRandomNumber()).padStart(4, "0")}`;
 }
 
 export default function Register() {
   const [step, setStep] = useState(1);
-  const [draft, setDraft] = useState<Draft>({ id: generateId(), prenom: "", nom: "", password: "", dob: "", cin: "" });
+  const [draft, setDraft] = useState<Draft>(() => {
+    let id = generateId();
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const cat = params.get('category');
+        if (cat && /^[A-Z]$/i.test(cat)) {
+          id = generateId(cat.toUpperCase().slice(0, 1));
+        }
+      }
+    } catch (e) {}
+    return { id, prenom: "", nom: "", password: "", dob: "", cin: "" };
+  });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
