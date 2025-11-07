@@ -155,9 +155,26 @@ export default function Compte() {
 
   async function saveTutor() {
     try {
-      const payload = { id: displayUser.external_code || (displayUser as any).id, tutor: tutorForm };
+      const id = displayUser.external_code || (displayUser as any).id;
+      const tutorPayload: Record<string, any> = {};
+      const keys = ['prenom','nom','type','cin','phone'];
+      for (const k of keys) {
+        const v = (tutorForm as any)[k];
+        if (typeof v !== 'undefined' && v !== '') tutorPayload[k] = v;
+      }
+
+      if (Object.keys(tutorPayload).length === 0) {
+        setEditingTutor(false);
+        return;
+      }
+
+      const payload = { id, tutor: tutorPayload };
       const resp = await fetch('/api/user', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!resp.ok) throw new Error('Failed to save tutor');
+      if (!resp.ok) {
+        const txt = await resp.text().catch(() => '');
+        console.warn('Save tutor failed response', resp.status, txt);
+        throw new Error('Failed to save tutor');
+      }
       const json = await resp.json();
       try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
       setEditingTutor(false);
