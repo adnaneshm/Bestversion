@@ -76,6 +76,30 @@ export default function Compte() {
 
   const displayUser = remoteUser || user;
 
+  // Edit states
+  const [editingBasic, setEditingBasic] = React.useState(false);
+  const [editingTutor, setEditingTutor] = React.useState(false);
+  const [form, setForm] = React.useState<any>({});
+  const [tutorForm, setTutorForm] = React.useState<any>({});
+
+  React.useEffect(() => {
+    setForm({
+      prenom: displayUser?.prenom || '',
+      nom: displayUser?.nom || '',
+      dob: displayUser?.dob || '',
+      phone: displayUser?.phone || '',
+      address: displayUser?.address || '',
+      cin: (displayUser as any)?.cin || '',
+    });
+    setTutorForm({
+      prenom: (displayUser as any)?.tutor?.prenom || '',
+      nom: (displayUser as any)?.tutor?.nom || '',
+      type: (displayUser as any)?.tutor?.type || '',
+      cin: (displayUser as any)?.tutor?.cin || '',
+      phone: (displayUser as any)?.tutor?.phone || '',
+    });
+  }, [displayUser]);
+
   function computeAgeFromDob(dob?: string) {
     if (!dob) return undefined;
     const b = new Date(dob);
@@ -92,6 +116,37 @@ export default function Compte() {
   const displayName = firstName && lastName ? `${firstName} ${lastName}` : (displayUser.name || '');
   const isChef = String(displayUser.role || '').toLowerCase().includes('chef') || String(displayUser.niche_id || '').toLowerCase().includes('chef') || (typeof window !== 'undefined' && window.location.pathname.includes('compte-chef'));
 
+  async function saveBasic() {
+    try {
+      const payload = { id: displayUser.external_code || (displayUser as any).id, ...form };
+      const resp = await fetch('/api/user', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!resp.ok) throw new Error('Failed to save');
+      const json = await resp.json();
+      // update local storage and state
+      try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
+      setEditingBasic(false);
+      setRemoteUser(json.user || remoteUser);
+    } catch (e: any) {
+      console.warn('Save basic failed', e);
+      alert('Échec de l’enregistrement');
+    }
+  }
+
+  async function saveTutor() {
+    try {
+      const payload = { id: displayUser.external_code || (displayUser as any).id, tutor: tutorForm };
+      const resp = await fetch('/api/user', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!resp.ok) throw new Error('Failed to save tutor');
+      const json = await resp.json();
+      try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
+      setEditingTutor(false);
+      setRemoteUser(json.user || remoteUser);
+    } catch (e: any) {
+      console.warn('Save tutor failed', e);
+      alert('Échec de l’enregistrement du tuteur');
+    }
+  }
+
   return (
     <AuthenticatedLayout>
       <section>
@@ -101,15 +156,34 @@ export default function Compte() {
         {/* Full profile card */}
         <div className="mt-6">
           <div className="rounded-lg bg-white p-6 shadow">
-            <h2 className="text-lg font-semibold mb-4">Détails du compte</h2>
+            <h2 className="text-lg font-semibold mb-4 flex items-center justify-between">Détails du compte
+              <div>
+                {!editingBasic ? (
+                  <button onClick={() => setEditingBasic(true)} className="text-sm text-violet-600">✏️ Modifier</button>
+                ) : (
+                  <>
+                    <button onClick={saveBasic} className="text-sm text-white bg-violet-600 px-3 py-1 rounded">Enregistrer</button>
+                    <button onClick={() => { setEditingBasic(false); setForm({ ...form }); }} className="ml-2 text-sm">Annuler</button>
+                  </>
+                )}
+              </div>
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-slate-500">Prénom</p>
-                <p className="font-medium">{(displayUser as any).prenom || firstName || "—"}</p>
+                {!editingBasic ? (
+                  <p className="font-medium">{(displayUser as any).prenom || firstName || "—"}</p>
+                ) : (
+                  <input value={form.prenom} onChange={(e) => setForm((s: any) => ({ ...s, prenom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                )}
 
                 <p className="text-sm text-slate-500 mt-3">Nom</p>
-                <p className="font-medium">{(displayUser as any).nom || lastName || "—"}</p>
+                {!editingBasic ? (
+                  <p className="font-medium">{(displayUser as any).nom || lastName || "—"}</p>
+                ) : (
+                  <input value={form.nom} onChange={(e) => setForm((s: any) => ({ ...s, nom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                )}
 
                 <p className="text-sm text-slate-500 mt-3">ID</p>
                 <p className="font-medium">{displayUser.external_code || "—"}</p>
@@ -121,30 +195,65 @@ export default function Compte() {
                 <p className="font-medium">{displayUser.niche_id || "—"}</p>
 
                 <p className="text-sm text-slate-500 mt-3">CIN</p>
-                <p className="font-medium">{((displayUser as any).cin) || '—'}</p>
+                {!editingBasic ? (
+                  <p className="font-medium">{((displayUser as any).cin) || '—'}</p>
+                ) : (
+                  <input value={form.cin} onChange={(e) => setForm((s: any) => ({ ...s, cin: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                )}
 
                 <p className="text-sm text-slate-500 mt-3">Âge</p>
                 <p className="font-medium">{computeAgeFromDob((displayUser as any).dob) ?? '—'}</p>
 
                 <p className="text-sm text-slate-500 mt-3">Téléphone (membre)</p>
-                <p className="font-medium">{((displayUser as any).phone) || '—'}</p>
+                {!editingBasic ? (
+                  <p className="font-medium">{((displayUser as any).phone) || '—'}</p>
+                ) : (
+                  <input value={form.phone} onChange={(e) => setForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                )}
               </div>
 
               {!isChef && (
                 <div>
-                  <h3 className="text-sm text-slate-500">Tuteur</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm text-slate-500">Tuteur</h3>
+                    {!editingTutor ? (
+                      <button onClick={() => setEditingTutor(true)} className="text-sm text-violet-600">✏️ Modifier le tuteur</button>
+                    ) : (
+                      <>
+                        <button onClick={saveTutor} className="text-sm text-white bg-violet-600 px-3 py-1 rounded">Enregistrer</button>
+                        <button onClick={() => setEditingTutor(false)} className="ml-2 text-sm">Annuler</button>
+                      </>
+                    )}
+                  </div>
+
                   <div className="mt-2">
                     <p className="text-sm text-slate-500">Prénom</p>
-                    <p className="font-medium">{((displayUser as any).tutor?.prenom) || '—'}</p>
+                    {!editingTutor ? (
+                      <p className="font-medium">{((displayUser as any).tutor?.prenom) || '—'}</p>
+                    ) : (
+                      <input value={tutorForm.prenom} onChange={(e) => setTutorForm((s: any) => ({ ...s, prenom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                    )}
 
                     <p className="text-sm text-slate-500 mt-3">Nom</p>
-                    <p className="font-medium">{((displayUser as any).tutor?.nom) || '—'}</p>
+                    {!editingTutor ? (
+                      <p className="font-medium">{((displayUser as any).tutor?.nom) || '—'}</p>
+                    ) : (
+                      <input value={tutorForm.nom} onChange={(e) => setTutorForm((s: any) => ({ ...s, nom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                    )}
 
                     <p className="text-sm text-slate-500 mt-3">Type</p>
-                    <p className="font-medium">{((displayUser as any).tutor?.type) || '—'}</p>
+                    {!editingTutor ? (
+                      <p className="font-medium">{((displayUser as any).tutor?.type) || '—'}</p>
+                    ) : (
+                      <input value={tutorForm.type} onChange={(e) => setTutorForm((s: any) => ({ ...s, type: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                    )}
 
                     <p className="text-sm text-slate-500 mt-3">Téléphone (tuteur)</p>
-                    <p className="font-medium">{((displayUser as any).tutor?.phone) || '—'}</p>
+                    {!editingTutor ? (
+                      <p className="font-medium">{((displayUser as any).tutor?.phone) || '—'}</p>
+                    ) : (
+                      <input value={tutorForm.phone} onChange={(e) => setTutorForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                    )}
                   </div>
                 </div>
               )}
