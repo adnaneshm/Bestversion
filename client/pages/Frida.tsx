@@ -1,18 +1,11 @@
-import React from "react";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import MainLayout from "@/components/layout/MainLayout";
 
 export default function Frida() {
   return (
-    <AuthenticatedLayout>
-      <div>
-        <h1 className="text-2xl font-bold">Founoun Arriyada</h1>
-        <p className="text-sm text-slate-600 mt-1">Bibliothèque de textes et ressources.</p>
-
-        <div className="mt-4 space-y-2">
-          <div className="bg-white p-4 rounded shadow">Texte 1</div>
-          <div className="bg-white p-4 rounded shadow">Texte 2</div>
-        </div>
-      </div>
-    </AuthenticatedLayout>
+    <MainLayout>
+      <section className="mx-auto max-w-xl">
+        <div className="p-6" />
+      </section>
+    </MainLayout>
   );
 }
