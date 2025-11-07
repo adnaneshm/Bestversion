@@ -96,7 +96,8 @@ export default function Register() {
     if (!draft.prenom) missingBasics.push('Prénom');
     if (!draft.nom) missingBasics.push('Nom');
     if (!draft.password) missingBasics.push('Mot de passe');
-    if (!(draft as any).cin) missingBasics.push('CIN');
+    // Accept CIN provided either for the member (draft.cin) or the tutor (draft.tutor.cin)
+    if (!draft.cin && (!((draft as any).tutor && (draft as any).tutor.cin))) missingBasics.push('CIN');
     if (missingBasics.length) {
       setError(`Informations incomplètes: ${missingBasics.join(', ')}`);
       return;
