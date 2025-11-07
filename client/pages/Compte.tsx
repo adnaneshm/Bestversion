@@ -246,7 +246,7 @@ export default function Compte() {
                 {!editingBasic ? (
                   <p className="font-medium">{((displayUser as any).phone) || '—'}</p>
                 ) : (
-                  <input value={form.phone} onChange={(e) => setForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                  <input type="tel" inputMode="numeric" pattern="[0-9]*" value={form.phone} onChange={(e) => setForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
                 )}
               </div>
 
