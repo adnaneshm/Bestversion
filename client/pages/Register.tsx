@@ -247,6 +247,7 @@ export default function Register() {
                 </div>
                 <input placeholder="Téléphone personnel" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ phone: e.target.value })} />
                 <input placeholder="Adresse" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ address: e.target.value })} />
+                <input placeholder="CIN" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ cin: e.target.value })} />
               </div>
             </div>
           )}
