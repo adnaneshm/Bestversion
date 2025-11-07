@@ -15,47 +15,58 @@ export default function Compte() {
     async function fetchRemoteUser() {
       try {
         let id = user.external_code || (user as any).id;
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           try {
-            const stored = localStorage.getItem('shm_user');
+            const stored = localStorage.getItem("shm_user");
             if (stored) {
               const parsed = JSON.parse(stored);
-              id = parsed.external_code || parsed.externalCode || parsed.id || id;
+              id =
+                parsed.external_code || parsed.externalCode || parsed.id || id;
             }
-          } catch (e) { }
+          } catch (e) {}
         }
         if (!id) return;
-        if (typeof window !== 'undefined' && ('onLine' in navigator) && !navigator.onLine) {
+        if (
+          typeof window !== "undefined" &&
+          "onLine" in navigator &&
+          !navigator.onLine
+        ) {
           // offline - skip
           return;
         }
-        const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
-        const url = `${base.replace(/\/$/, '')}/api/user?id=${encodeURIComponent(id)}`;
-        const resp = await fetch(url, { credentials: 'same-origin' });
+        const base =
+          (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+        const url = `${base.replace(/\/$/, "")}/api/user?id=${encodeURIComponent(id)}`;
+        const resp = await fetch(url, { credentials: "same-origin" });
         if (!resp.ok) {
-          console.warn('Non-ok response from /api/user', resp.status);
+          console.warn("Non-ok response from /api/user", resp.status);
           return;
         }
         const data = await resp.json();
         if (!mounted) return;
         setRemoteUser(data.user || null);
       } catch (e) {
-        console.warn('Failed loading remote user', e);
+        console.warn("Failed loading remote user", e);
       }
     }
 
     async function fetchScore() {
       setLoading(true);
-      if (typeof window !== 'undefined' && ('onLine' in navigator) && !navigator.onLine) {
+      if (
+        typeof window !== "undefined" &&
+        "onLine" in navigator &&
+        !navigator.onLine
+      ) {
         setLoading(false);
         return;
       }
       try {
-        const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
-        const url = `${base.replace(/\/$/, '')}/api/score`;
-        const resp = await fetch(url, { credentials: 'same-origin' });
+        const base =
+          (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+        const url = `${base.replace(/\/$/, "")}/api/score`;
+        const resp = await fetch(url, { credentials: "same-origin" });
         if (!resp.ok) {
-          console.warn('Non-ok response from /api/score', resp.status);
+          console.warn("Non-ok response from /api/score", resp.status);
           setLoading(false);
           return;
         }
@@ -63,7 +74,7 @@ export default function Compte() {
         if (!mounted) return;
         if (data && typeof data.score === "number") setScore(data.score);
       } catch (e) {
-        console.warn('Failed loading score', e);
+        console.warn("Failed loading score", e);
       } finally {
         setLoading(false);
       }
@@ -71,7 +82,9 @@ export default function Compte() {
 
     fetchRemoteUser();
     fetchScore();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [user.external_code]);
 
   const displayUser = remoteUser || user;
@@ -84,19 +97,19 @@ export default function Compte() {
 
   React.useEffect(() => {
     setForm({
-      prenom: displayUser?.prenom || '',
-      nom: displayUser?.nom || '',
-      dob: displayUser?.dob || '',
-      phone: displayUser?.phone || '',
-      address: displayUser?.address || '',
-      cin: (displayUser as any)?.cin || '',
+      prenom: displayUser?.prenom || "",
+      nom: displayUser?.nom || "",
+      dob: displayUser?.dob || "",
+      phone: displayUser?.phone || "",
+      address: displayUser?.address || "",
+      cin: (displayUser as any)?.cin || "",
     });
     setTutorForm({
-      prenom: (displayUser as any)?.tutor?.prenom || '',
-      nom: (displayUser as any)?.tutor?.nom || '',
-      type: (displayUser as any)?.tutor?.type || '',
-      cin: (displayUser as any)?.tutor?.cin || '',
-      phone: (displayUser as any)?.tutor?.phone || '',
+      prenom: (displayUser as any)?.tutor?.prenom || "",
+      nom: (displayUser as any)?.tutor?.nom || "",
+      type: (displayUser as any)?.tutor?.type || "",
+      cin: (displayUser as any)?.tutor?.cin || "",
+      phone: (displayUser as any)?.tutor?.phone || "",
     });
   }, [remoteUser?.id, user.external_code]);
 
@@ -111,21 +124,38 @@ export default function Compte() {
     return age;
   }
 
-  const firstName = (displayUser as any).prenom || (displayUser.name || '').split(' ')[0] || '';
-  const lastName = (displayUser as any).nom || (displayUser.name || '').split(' ').slice(1).join(' ') || '';
-  const displayName = firstName && lastName ? `${firstName} ${lastName}` : (displayUser.name || '');
-  const isChef = String(displayUser.role || '').toLowerCase().includes('chef') || String(displayUser.niche_id || '').toLowerCase().includes('chef') || (typeof window !== 'undefined' && window.location.pathname.includes('compte-chef'));
+  const firstName =
+    (displayUser as any).prenom || (displayUser.name || "").split(" ")[0] || "";
+  const lastName =
+    (displayUser as any).nom ||
+    (displayUser.name || "").split(" ").slice(1).join(" ") ||
+    "";
+  const displayName =
+    firstName && lastName ? `${firstName} ${lastName}` : displayUser.name || "";
+  const isChef =
+    String(displayUser.role || "")
+      .toLowerCase()
+      .includes("chef") ||
+    String(displayUser.niche_id || "")
+      .toLowerCase()
+      .includes("chef") ||
+    (typeof window !== "undefined" &&
+      window.location.pathname.includes("compte-chef"));
 
   async function saveBasic() {
     try {
       const id = displayUser.external_code || (displayUser as any).id;
       const payload: Record<string, any> = { id };
       // only include fields that changed and are non-empty (avoid sending columns that may not exist)
-      const candidateFields = ['prenom','nom','dob','phone','cin'];
+      const candidateFields = ["prenom", "nom", "dob", "phone", "cin"];
       for (const k of candidateFields) {
         const newVal = (form as any)[k];
-        const oldVal = (displayUser as any)[k] ?? '';
-        if (typeof newVal !== 'undefined' && newVal !== '' && String(newVal) !== String(oldVal)) {
+        const oldVal = (displayUser as any)[k] ?? "";
+        if (
+          typeof newVal !== "undefined" &&
+          newVal !== "" &&
+          String(newVal) !== String(oldVal)
+        ) {
           payload[k] = newVal;
         }
       }
@@ -136,30 +166,38 @@ export default function Compte() {
         return;
       }
 
-      const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
-      const url = `${base.replace(/\/$/, '')}/api/user`;
-      const resp = await fetch(url, { method: 'PATCH', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const base =
+        (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+      const url = `${base.replace(/\/$/, "")}/api/user`;
+      const resp = await fetch(url, {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       if (!resp.ok) {
-        const txt = await resp.text().catch(() => '');
-        console.warn('Save basic failed response', resp.status, txt);
-        throw new Error('Failed to save');
+        const txt = await resp.text().catch(() => "");
+        console.warn("Save basic failed response", resp.status, txt);
+        throw new Error("Failed to save");
       }
       const json = await resp.json();
-      try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
+      try {
+        localStorage.setItem("shm_user", JSON.stringify(json.user));
+      } catch (e) {}
       setEditingBasic(false);
       const newUser = json.user || remoteUser;
       setRemoteUser(newUser);
       setForm({
-        prenom: newUser?.prenom || '',
-        nom: newUser?.nom || '',
-        dob: newUser?.dob || '',
-        phone: newUser?.phone || '',
-        address: newUser?.address || '',
-        cin: newUser?.cin || '',
+        prenom: newUser?.prenom || "",
+        nom: newUser?.nom || "",
+        dob: newUser?.dob || "",
+        phone: newUser?.phone || "",
+        address: newUser?.address || "",
+        cin: newUser?.cin || "",
       });
     } catch (e: any) {
-      console.warn('Save basic failed', e);
-      alert('Échec de l’enregistrement');
+      console.warn("Save basic failed", e);
+      alert("Échec de l’enregistrement");
     }
   }
 
@@ -167,10 +205,10 @@ export default function Compte() {
     try {
       const id = displayUser.external_code || (displayUser as any).id;
       const tutorPayload: Record<string, any> = {};
-      const keys = ['prenom','nom','type','cin','phone'];
+      const keys = ["prenom", "nom", "type", "cin", "phone"];
       for (const k of keys) {
         const v = (tutorForm as any)[k];
-        if (typeof v !== 'undefined' && v !== '') tutorPayload[k] = v;
+        if (typeof v !== "undefined" && v !== "") tutorPayload[k] = v;
       }
 
       if (Object.keys(tutorPayload).length === 0) {
@@ -179,29 +217,37 @@ export default function Compte() {
       }
 
       const payload = { id, tutor: tutorPayload };
-      const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
-      const url = `${base.replace(/\/$/, '')}/api/user`;
-      const resp = await fetch(url, { method: 'PATCH', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const base =
+        (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+      const url = `${base.replace(/\/$/, "")}/api/user`;
+      const resp = await fetch(url, {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       if (!resp.ok) {
-        const txt = await resp.text().catch(() => '');
-        console.warn('Save tutor failed response', resp.status, txt);
-        throw new Error('Failed to save tutor');
+        const txt = await resp.text().catch(() => "");
+        console.warn("Save tutor failed response", resp.status, txt);
+        throw new Error("Failed to save tutor");
       }
       const json = await resp.json();
-      try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
+      try {
+        localStorage.setItem("shm_user", JSON.stringify(json.user));
+      } catch (e) {}
       setEditingTutor(false);
       const newUser = json.user || remoteUser;
       setRemoteUser(newUser);
       setTutorForm({
-        prenom: newUser?.tutor?.prenom || '',
-        nom: newUser?.tutor?.nom || '',
-        type: newUser?.tutor?.type || '',
-        cin: newUser?.tutor?.cin || '',
-        phone: newUser?.tutor?.phone || '',
+        prenom: newUser?.tutor?.prenom || "",
+        nom: newUser?.tutor?.nom || "",
+        type: newUser?.tutor?.type || "",
+        cin: newUser?.tutor?.cin || "",
+        phone: newUser?.tutor?.phone || "",
       });
     } catch (e: any) {
-      console.warn('Save tutor failed', e);
-      alert('Échec de l’enregistrement du tuteur');
+      console.warn("Save tutor failed", e);
+      alert("Échec de l’enregistrement du tuteur");
     }
   }
 
@@ -214,14 +260,33 @@ export default function Compte() {
         {/* Full profile card */}
         <div className="mt-6">
           <div className="rounded-lg bg-white p-6 shadow">
-            <h2 className="text-lg font-semibold mb-4 flex items-center justify-between">Détails du compte
+            <h2 className="text-lg font-semibold mb-4 flex items-center justify-between">
+              Détails du compte
               <div>
                 {!editingBasic ? (
-                  <button onClick={() => setEditingBasic(true)} className="text-sm text-violet-600">✏️ Modifier</button>
+                  <button
+                    onClick={() => setEditingBasic(true)}
+                    className="text-sm text-violet-600"
+                  >
+                    ✏️ Modifier
+                  </button>
                 ) : (
                   <>
-                    <button onClick={saveBasic} className="text-sm text-white bg-violet-600 px-3 py-1 rounded">Enregistrer</button>
-                    <button onClick={() => { setEditingBasic(false); setForm({ ...form }); }} className="ml-2 text-sm">Annuler</button>
+                    <button
+                      onClick={saveBasic}
+                      className="text-sm text-white bg-violet-600 px-3 py-1 rounded"
+                    >
+                      Enregistrer
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingBasic(false);
+                        setForm({ ...form });
+                      }}
+                      className="ml-2 text-sm"
+                    >
+                      Annuler
+                    </button>
                   </>
                 )}
               </div>
@@ -231,20 +296,38 @@ export default function Compte() {
               <div>
                 <p className="text-sm text-slate-500">Prénom</p>
                 {!editingBasic ? (
-                  <p className="font-medium">{(displayUser as any).prenom || firstName || "—"}</p>
+                  <p className="font-medium">
+                    {(displayUser as any).prenom || firstName || "—"}
+                  </p>
                 ) : (
-                  <input value={form.prenom} onChange={(e) => setForm((s: any) => ({ ...s, prenom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                  <input
+                    value={form.prenom}
+                    onChange={(e) =>
+                      setForm((s: any) => ({ ...s, prenom: e.target.value }))
+                    }
+                    className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                  />
                 )}
 
                 <p className="text-sm text-slate-500 mt-3">Nom</p>
                 {!editingBasic ? (
-                  <p className="font-medium">{(displayUser as any).nom || lastName || "—"}</p>
+                  <p className="font-medium">
+                    {(displayUser as any).nom || lastName || "—"}
+                  </p>
                 ) : (
-                  <input value={form.nom} onChange={(e) => setForm((s: any) => ({ ...s, nom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                  <input
+                    value={form.nom}
+                    onChange={(e) =>
+                      setForm((s: any) => ({ ...s, nom: e.target.value }))
+                    }
+                    className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                  />
                 )}
 
                 <p className="text-sm text-slate-500 mt-3">ID</p>
-                <p className="font-medium">{displayUser.external_code || "—"}</p>
+                <p className="font-medium">
+                  {displayUser.external_code || "—"}
+                </p>
 
                 <p className="text-sm text-slate-500 mt-3">R��le</p>
                 <p className="font-medium">{displayUser.role || "—"}</p>
@@ -254,19 +337,42 @@ export default function Compte() {
 
                 <p className="text-sm text-slate-500 mt-3">CIN</p>
                 {!editingBasic ? (
-                  <p className="font-medium">{((displayUser as any).cin) || '—'}</p>
+                  <p className="font-medium">
+                    {(displayUser as any).cin || "—"}
+                  </p>
                 ) : (
-                  <input value={form.cin} onChange={(e) => setForm((s: any) => ({ ...s, cin: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                  <input
+                    value={form.cin}
+                    onChange={(e) =>
+                      setForm((s: any) => ({ ...s, cin: e.target.value }))
+                    }
+                    className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                  />
                 )}
 
                 <p className="text-sm text-slate-500 mt-3">Âge</p>
-                <p className="font-medium">{computeAgeFromDob((displayUser as any).dob) ?? '—'}</p>
+                <p className="font-medium">
+                  {computeAgeFromDob((displayUser as any).dob) ?? "—"}
+                </p>
 
-                <p className="text-sm text-slate-500 mt-3">Téléphone (membre)</p>
+                <p className="text-sm text-slate-500 mt-3">
+                  Téléphone (membre)
+                </p>
                 {!editingBasic ? (
-                  <p className="font-medium">{((displayUser as any).phone) || '—'}</p>
+                  <p className="font-medium">
+                    {(displayUser as any).phone || "—"}
+                  </p>
                 ) : (
-                  <input type="tel" inputMode="numeric" pattern="[0-9]*" value={form.phone} onChange={(e) => setForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={form.phone}
+                    onChange={(e) =>
+                      setForm((s: any) => ({ ...s, phone: e.target.value }))
+                    }
+                    className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                  />
                 )}
               </div>
 
@@ -275,11 +381,26 @@ export default function Compte() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm text-slate-500">Tuteur</h3>
                     {!editingTutor ? (
-                      <button onClick={() => setEditingTutor(true)} className="text-sm text-violet-600">✏️ Modifier le tuteur</button>
+                      <button
+                        onClick={() => setEditingTutor(true)}
+                        className="text-sm text-violet-600"
+                      >
+                        ✏️ Modifier le tuteur
+                      </button>
                     ) : (
                       <>
-                        <button onClick={saveTutor} className="text-sm text-white bg-violet-600 px-3 py-1 rounded">Enregistrer</button>
-                        <button onClick={() => setEditingTutor(false)} className="ml-2 text-sm">Annuler</button>
+                        <button
+                          onClick={saveTutor}
+                          className="text-sm text-white bg-violet-600 px-3 py-1 rounded"
+                        >
+                          Enregistrer
+                        </button>
+                        <button
+                          onClick={() => setEditingTutor(false)}
+                          className="ml-2 text-sm"
+                        >
+                          Annuler
+                        </button>
                       </>
                     )}
                   </div>
@@ -287,30 +408,79 @@ export default function Compte() {
                   <div className="mt-2">
                     <p className="text-sm text-slate-500">Prénom</p>
                     {!editingTutor ? (
-                      <p className="font-medium">{((displayUser as any).tutor?.prenom) || '—'}</p>
+                      <p className="font-medium">
+                        {(displayUser as any).tutor?.prenom || "—"}
+                      </p>
                     ) : (
-                      <input value={tutorForm.prenom} onChange={(e) => setTutorForm((s: any) => ({ ...s, prenom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                      <input
+                        value={tutorForm.prenom}
+                        onChange={(e) =>
+                          setTutorForm((s: any) => ({
+                            ...s,
+                            prenom: e.target.value,
+                          }))
+                        }
+                        className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                      />
                     )}
 
                     <p className="text-sm text-slate-500 mt-3">Nom</p>
                     {!editingTutor ? (
-                      <p className="font-medium">{((displayUser as any).tutor?.nom) || '—'}</p>
+                      <p className="font-medium">
+                        {(displayUser as any).tutor?.nom || "—"}
+                      </p>
                     ) : (
-                      <input value={tutorForm.nom} onChange={(e) => setTutorForm((s: any) => ({ ...s, nom: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                      <input
+                        value={tutorForm.nom}
+                        onChange={(e) =>
+                          setTutorForm((s: any) => ({
+                            ...s,
+                            nom: e.target.value,
+                          }))
+                        }
+                        className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                      />
                     )}
 
                     <p className="text-sm text-slate-500 mt-3">Type</p>
                     {!editingTutor ? (
-                      <p className="font-medium">{((displayUser as any).tutor?.type) || '—'}</p>
+                      <p className="font-medium">
+                        {(displayUser as any).tutor?.type || "—"}
+                      </p>
                     ) : (
-                      <input value={tutorForm.type} onChange={(e) => setTutorForm((s: any) => ({ ...s, type: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                      <input
+                        value={tutorForm.type}
+                        onChange={(e) =>
+                          setTutorForm((s: any) => ({
+                            ...s,
+                            type: e.target.value,
+                          }))
+                        }
+                        className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                      />
                     )}
 
-                    <p className="text-sm text-slate-500 mt-3">Téléphone (tuteur)</p>
+                    <p className="text-sm text-slate-500 mt-3">
+                      Téléphone (tuteur)
+                    </p>
                     {!editingTutor ? (
-                      <p className="font-medium">{((displayUser as any).tutor?.phone) || '—'}</p>
+                      <p className="font-medium">
+                        {(displayUser as any).tutor?.phone || "—"}
+                      </p>
                     ) : (
-                      <input type="tel" inputMode="numeric" pattern="[0-9]*" value={tutorForm.phone} onChange={(e) => setTutorForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={tutorForm.phone}
+                        onChange={(e) =>
+                          setTutorForm((s: any) => ({
+                            ...s,
+                            phone: e.target.value,
+                          }))
+                        }
+                        className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none"
+                      />
                     )}
                   </div>
                 </div>
@@ -323,9 +493,15 @@ export default function Compte() {
         <div className="mt-6 space-y-2">
           <h2 className="font-semibold">Sections</h2>
           <ul className="grid md:grid-cols-3 gap-2">
-            <li className="p-3 bg-white rounded shadow"><Link to="/activites">Mes activités</Link></li>
-            <li className="p-3 bg-white rounded shadow"><Link to="/membres">Mes évaluations</Link></li>
-            <li className="p-3 bg-white rounded shadow"><Link to="/marketplace">Mes achats</Link></li>
+            <li className="p-3 bg-white rounded shadow">
+              <Link to="/activites">Mes activités</Link>
+            </li>
+            <li className="p-3 bg-white rounded shadow">
+              <Link to="/membres">Mes évaluations</Link>
+            </li>
+            <li className="p-3 bg-white rounded shadow">
+              <Link to="/marketplace">Mes achats</Link>
+            </li>
             <li className="p-3 bg-white rounded shadow">Notifications</li>
           </ul>
         </div>

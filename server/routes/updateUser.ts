@@ -5,7 +5,9 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const serviceRole = process.env.SUPABASE_SERVICE_ROLE;
     if (!supabaseUrl || !serviceRole) {
-      return res.status(500).json({ error: "Supabase configuration missing on server." });
+      return res
+        .status(500)
+        .json({ error: "Supabase configuration missing on server." });
     }
 
     const body = req.body as Record<string, any>;
@@ -31,7 +33,7 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
 
     // If tutor provided, try to find existing tutor by CIN and update it, otherwise create a new tutor and attach tutor_id
     let tutor_id: number | null = null;
-    if (body.tutor && typeof body.tutor === 'object') {
+    if (body.tutor && typeof body.tutor === "object") {
       const tutorPayload = {
         type: body.tutor.type || null,
         prenom: body.tutor.prenom || null,
@@ -45,17 +47,28 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
         // If CIN provided, try to find existing tutor
         if (tutorPayload.cin) {
           const q = `${supabaseUrl}/rest/v1/tutors?cin=eq.${encodeURIComponent(tutorPayload.cin)}&select=*`;
-          const findResp = await fetch(q, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+          const findResp = await fetch(q, {
+            headers: {
+              apikey: serviceRole,
+              Authorization: `Bearer ${serviceRole}`,
+            },
+          });
           if (findResp.ok) {
             const arr = await findResp.json();
-            const existing = Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
+            const existing =
+              Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
             if (existing && existing.id) {
               // update existing tutor
               const tutorId = existing.id;
               const patchUrl = `${supabaseUrl}/rest/v1/tutors?id=eq.${encodeURIComponent(tutorId)}`;
               const patchResp = await fetch(patchUrl, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', apikey: serviceRole, Authorization: `Bearer ${serviceRole}`, Prefer: 'return=representation' },
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  apikey: serviceRole,
+                  Authorization: `Bearer ${serviceRole}`,
+                  Prefer: "return=representation",
+                },
                 body: JSON.stringify(tutorPayload),
               });
               if (patchResp.ok) {
@@ -83,16 +96,21 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
 
           if (insertTutorResp.ok) {
             const tutorInserted = await insertTutorResp.json();
-            const t = Array.isArray(tutorInserted) ? tutorInserted[0] : tutorInserted;
+            const t = Array.isArray(tutorInserted)
+              ? tutorInserted[0]
+              : tutorInserted;
             tutor_id = t?.id ?? null;
             userPayload.tutor_id = tutor_id;
           } else {
             const dt = await insertTutorResp.text().catch(() => "");
-            console.warn('Failed to create tutor during update:', dt);
+            console.warn("Failed to create tutor during update:", dt);
           }
         }
       } catch (err) {
-        console.warn('Failed to create/update tutor during update (network):', err);
+        console.warn(
+          "Failed to create/update tutor during update (network):",
+          err,
+        );
       }
     }
 
@@ -127,8 +145,12 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
 
           while (attempts < 5) {
             // find quoted identifiers in error text
-            const singleQuoted = Array.from((errTxt.matchAll(/'([^']+)'/g))).map(m => m[1]);
-            const doubleQuoted = Array.from((errTxt.matchAll(/"([^"]+)"/g))).map(m => m[1]);
+            const singleQuoted = Array.from(errTxt.matchAll(/'([^']+)'/g)).map(
+              (m) => m[1],
+            );
+            const doubleQuoted = Array.from(errTxt.matchAll(/"([^"]+)"/g)).map(
+              (m) => m[1],
+            );
             const candidates = [...singleQuoted, ...doubleQuoted];
 
             let removed = false;
@@ -142,7 +164,7 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
 
             if (!removed) {
               const m2 = errTxt.match(/column\s+([A-Za-z0-9_]+)/i);
-              if (m2 && m2[1] && (m2[1] in currentPayload)) {
+              if (m2 && m2[1] && m2[1] in currentPayload) {
                 delete currentPayload[m2[1] as keyof typeof currentPayload];
                 removed = true;
               }
@@ -153,14 +175,18 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
             const retry = await doPatch(urlB, currentPayload);
             if (retry.ok) {
               const updated = await retry.json();
-              return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
+              return res.json({
+                user: Array.isArray(updated) ? updated[0] : updated,
+              });
             }
             errTxt = await retry.text().catch(() => "");
             attempts++;
           }
 
           // Could not recover
-          return res.status(500).json({ error: 'Failed to update user', detail: errTxt });
+          return res
+            .status(500)
+            .json({ error: "Failed to update user", detail: errTxt });
         }
       }
 
@@ -169,9 +195,19 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
       try {
         const getUrlA = `${supabaseUrl}/rest/v1/app_users?id=eq.${encodeURIComponent(id)}&select=*`;
         const getUrlB = `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(id)}&select=*`;
-        let getResp = await fetch(getUrlA, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+        let getResp = await fetch(getUrlA, {
+          headers: {
+            apikey: serviceRole,
+            Authorization: `Bearer ${serviceRole}`,
+          },
+        });
         if (!getResp.ok) {
-          getResp = await fetch(getUrlB, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+          getResp = await fetch(getUrlB, {
+            headers: {
+              apikey: serviceRole,
+              Authorization: `Bearer ${serviceRole}`,
+            },
+          });
         }
         if (getResp.ok) {
           const users = await getResp.json();
@@ -180,16 +216,16 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
         }
       } catch (e) {
         // ignore and fallback to returning updated
-        console.warn('Failed to fetch full user after update', e);
+        console.warn("Failed to fetch full user after update", e);
       }
 
       return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
     } catch (err: any) {
-      console.error('updateUser network error', err);
-      return res.status(500).json({ error: err?.message || 'Network error' });
+      console.error("updateUser network error", err);
+      return res.status(500).json({ error: err?.message || "Network error" });
     }
   } catch (error: any) {
-    console.error('updateUser error', error);
-    return res.status(500).json({ error: error?.message || 'Unknown error' });
+    console.error("updateUser error", error);
+    return res.status(500).json({ error: error?.message || "Unknown error" });
   }
 };
