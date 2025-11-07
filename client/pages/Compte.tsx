@@ -145,10 +145,18 @@ export default function Compte() {
         throw new Error('Failed to save');
       }
       const json = await resp.json();
-      // update local storage and state
       try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
       setEditingBasic(false);
-      setRemoteUser(json.user || remoteUser);
+      const newUser = json.user || remoteUser;
+      setRemoteUser(newUser);
+      setForm({
+        prenom: newUser?.prenom || '',
+        nom: newUser?.nom || '',
+        dob: newUser?.dob || '',
+        phone: newUser?.phone || '',
+        address: newUser?.address || '',
+        cin: newUser?.cin || '',
+      });
     } catch (e: any) {
       console.warn('Save basic failed', e);
       alert('Échec de l’enregistrement');
