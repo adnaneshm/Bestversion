@@ -28,6 +28,13 @@ export function createServer() {
     const { handleUser } = require("./routes/user");
     return handleUser(req, res, next);
   });
+
+  // Update user (PATCH) - allow editing profile from UI
+  app.patch("/api/user", (req, res, next) => {
+    const { handleUpdateUser } = require("./routes/updateUser");
+    return handleUpdateUser(req, res, next);
+  });
+
   app.post("/api/idees", (req, res, next) => {
     // lazy import to avoid circular issues
     const { handleIdee } = require("./routes/idees");
