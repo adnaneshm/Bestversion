@@ -1,11 +1,20 @@
 import MainLayout from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { t } from "@/lib/i18n";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [prefillId, setPrefillId] = useState<string>('');
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (id) setPrefillId(id);
+    } catch (e) {}
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

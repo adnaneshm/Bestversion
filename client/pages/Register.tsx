@@ -33,7 +33,7 @@ export default function Register() {
 
   const update = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
 
-  const maxStep = 2; // two steps: compte, perso (tuteur removed)
+  const maxStep = 3; // three steps: compte, perso, tuteur
 
   function isValidDobRange(dob?: string, minYear?: number, maxYear?: number) {
     if (!dob) return false;
@@ -246,26 +246,27 @@ export default function Register() {
                 </div>
                 <input placeholder="Téléphone personnel" inputMode="tel" type="tel" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ phone: e.target.value })} />
                 <input placeholder="Adresse" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ address: e.target.value })} />
+              </div>
+            </div>
+          )}
 
-                <div className="pt-3 border-t mt-2">
-                  <h4 className="font-medium">Informations du tuteur (si applicable)</h4>
-                  <div className="grid gap-2 mt-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      <input placeholder="Prénom tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, prenom: e.target.value } })} />
-                      <input placeholder="Nom tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, nom: e.target.value } })} />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <input placeholder="CIN tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, cin: e.target.value } })} />
-                      <input placeholder="Téléphone tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, phone: e.target.value } })} />
-                    </div>
-                    <select className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, type: e.target.value } })}>
-                      <option value="">Type tuteur (ex: parent, tuteur)</option>
-                      <option value="parent">Parent</option>
-                      <option value="tuteur">Tuteur</option>
-                    </select>
-                  </div>
+          {step === 3 && (
+            <div>
+              <h3 className="font-semibold text-lg mb-3">Informations du tuteur (si applicable)</h3>
+              <div className="grid gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <input placeholder="Prénom tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, prenom: e.target.value } })} />
+                  <input placeholder="Nom tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, nom: e.target.value } })} />
                 </div>
-
+                <div className="grid grid-cols-2 gap-2">
+                  <input placeholder="CIN tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, cin: e.target.value } })} />
+                  <input placeholder="Téléphone tuteur" className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, phone: e.target.value } })} />
+                </div>
+                <select className="h-11 rounded-md border border-slate-200 bg-white px-3" onChange={(e) => update({ tutor: { ...(draft as any).tutor, type: e.target.value } })}>
+                  <option value="">Type tuteur (ex: parent, tuteur)</option>
+                  <option value="parent">Parent</option>
+                  <option value="tuteur">Tuteur</option>
+                </select>
               </div>
             </div>
           )}
