@@ -77,7 +77,7 @@ export default function Login() {
           <form className="grid gap-4" onSubmit={submit}>
             <div className="grid gap-2">
               <label htmlFor="id" className="text-sm font-medium text-slate-700">{t('id_label')}</label>
-              <input id="id" name="id" required className="h-11 rounded-md border border-slate-200 bg-amber-50/60 px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
+              <input id="id" name="id" required value={prefillId} onChange={(e) => setPrefillId(e.target.value)} className="h-11 rounded-md border border-slate-200 bg-amber-50/60 px-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-600" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
