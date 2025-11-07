@@ -1,16 +1,23 @@
+# Build both client and server (server build outputs functions under dist/server)
 [build]
-  # Build both client and server (server build outputs functions under dist/server)
   command = "npm run build"
   functions = "netlify/functions"
   publish = "dist/spa"
-
 
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
   
+# API functions redirect to netlify function handler
 [[redirects]]
-  force = true
   from = "/api/*"
-  status = 200
   to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Single-page app fallback — serve index.html for all other routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
