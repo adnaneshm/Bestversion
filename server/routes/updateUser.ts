@@ -12,7 +12,7 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
     const id = body.id as string;
     if (!id) return res.status(400).json({ error: "Missing id" });
 
-    // Prepare user update payload
+    // Allowed user fields to update
     const allowed = [
       "prenom",
       "nom",
@@ -41,30 +41,33 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
         created_at: new Date().toISOString(),
       };
 
-      const insertTutorResp = await fetch(`${supabaseUrl}/rest/v1/tutors`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: serviceRole,
-          Authorization: `Bearer ${serviceRole}`,
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify(tutorPayload),
-      });
+      try {
+        const insertTutorResp = await fetch(`${supabaseUrl}/rest/v1/tutors`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: serviceRole,
+            Authorization: `Bearer ${serviceRole}`,
+            Prefer: "return=representation",
+          },
+          body: JSON.stringify(tutorPayload),
+        });
 
-      if (insertTutorResp.ok) {
-        const tutorInserted = await insertTutorResp.json();
-        const t = Array.isArray(tutorInserted) ? tutorInserted[0] : tutorInserted;
-        tutor_id = t?.id ?? null;
-        userPayload.tutor_id = tutor_id;
-      } else {
-        // log but continue
-        const dt = await insertTutorResp.text().catch(() => "");
-        console.warn('Failed to create tutor during update:', dt);
+        if (insertTutorResp.ok) {
+          const tutorInserted = await insertTutorResp.json();
+          const t = Array.isArray(tutorInserted) ? tutorInserted[0] : tutorInserted;
+          tutor_id = t?.id ?? null;
+          userPayload.tutor_id = tutor_id;
+        } else {
+          const dt = await insertTutorResp.text().catch(() => "");
+          console.warn('Failed to create tutor during update:', dt);
+        }
+      } catch (err) {
+        console.warn('Failed to create tutor during update (network):', err);
       }
     }
 
-    // Now patch user row by id. Try app_users first then users
+    // Patch user row by id. Try app_users first then users
     const urlA = `${supabaseUrl}/rest/v1/app_users?id=eq.${encodeURIComponent(id)}`;
     const urlB = `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(id)}`;
 
@@ -81,36 +84,63 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
       });
     };
 
-    // Try patch A
-    let resp = await doPatch(urlA, userPayload);
-    if (!resp.ok) {
-      const txt = await resp.text().catch(() => "");
-      // fallback to users
-      resp = await doPatch(urlB, userPayload);
+    // First try app_users
+    try {
+      let resp = await doPatch(urlA, userPayload);
       if (!resp.ok) {
-        const txt2 = await resp.text().catch(() => "");
-        // try detect missing column and retry without it
-        const m = txt2.match(/Could not find the column '([^']+)'/) || txt2.match(/column "([^\"]+)" does not exist/);
-        if (m && m[1]) {
-          const col = m[1];
-          if (col in userPayload) {
-            const filtered = { ...userPayload };
-            delete filtered[col as keyof typeof filtered];
-            const retry = await doPatch(urlB, filtered);
-            if (!retry.ok) {
-              const errText = await retry.text().catch(() => "");
-              return res.status(500).json({ error: 'Failed to update user', detail: errText });
-            }
-            const updated = await retry.json();
-            return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
-          }
-        }
-        return res.status(500).json({ error: 'Failed to update user', detail: txt2 || txt });
-      }
-    }
+        // fallback to users
+        resp = await doPatch(urlB, userPayload);
+        if (!resp.ok) {
+          // attempt to detect missing columns in the error message and retry without them
+          let errTxt = await resp.text().catch(() => "");
+          let attempts = 0;
+          let currentPayload: Record<string, any> = { ...userPayload };
 
-    const updated = await resp.json();
-    return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
+          while (attempts < 5) {
+            // find quoted identifiers in error text
+            const singleQuoted = Array.from((errTxt.matchAll(/'([^']+)'/g))).map(m => m[1]);
+            const doubleQuoted = Array.from((errTxt.matchAll(/"([^"]+)"/g))).map(m => m[1]);
+            const candidates = [...singleQuoted, ...doubleQuoted];
+
+            let removed = false;
+            for (const token of candidates) {
+              if (token in currentPayload) {
+                delete currentPayload[token as keyof typeof currentPayload];
+                removed = true;
+                break;
+              }
+            }
+
+            if (!removed) {
+              const m2 = errTxt.match(/column\s+([A-Za-z0-9_]+)/i);
+              if (m2 && m2[1] && (m2[1] in currentPayload)) {
+                delete currentPayload[m2[1] as keyof typeof currentPayload];
+                removed = true;
+              }
+            }
+
+            if (!removed) break;
+
+            const retry = await doPatch(urlB, currentPayload);
+            if (retry.ok) {
+              const updated = await retry.json();
+              return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
+            }
+            errTxt = await retry.text().catch(() => "");
+            attempts++;
+          }
+
+          // Could not recover
+          return res.status(500).json({ error: 'Failed to update user', detail: errTxt });
+        }
+      }
+
+      const updated = await resp.json();
+      return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
+    } catch (err: any) {
+      console.error('updateUser network error', err);
+      return res.status(500).json({ error: err?.message || 'Network error' });
+    }
   } catch (error: any) {
     console.error('updateUser error', error);
     return res.status(500).json({ error: error?.message || 'Unknown error' });
