@@ -25,8 +25,17 @@ export default function Compte() {
           } catch (e) { }
         }
         if (!id) return;
-        const resp = await fetch(`/api/user?id=${encodeURIComponent(id)}`);
-        if (!resp.ok) return;
+        if (typeof window !== 'undefined' && ('onLine' in navigator) && !navigator.onLine) {
+          // offline - skip
+          return;
+        }
+        const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+        const url = `${base.replace(/\/$/, '')}/api/user?id=${encodeURIComponent(id)}`;
+        const resp = await fetch(url, { credentials: 'same-origin' });
+        if (!resp.ok) {
+          console.warn('Non-ok response from /api/user', resp.status);
+          return;
+        }
         const data = await resp.json();
         if (!mounted) return;
         setRemoteUser(data.user || null);
@@ -37,15 +46,27 @@ export default function Compte() {
 
     async function fetchScore() {
       setLoading(true);
+      if (typeof window !== 'undefined' && ('onLine' in navigator) && !navigator.onLine) {
+        setLoading(false);
+        return;
+      }
       try {
-        const resp = await fetch("/api/score");
-        if (!resp.ok) return;
+        const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+        const url = `${base.replace(/\/$/, '')}/api/score`;
+        const resp = await fetch(url, { credentials: 'same-origin' });
+        if (!resp.ok) {
+          console.warn('Non-ok response from /api/score', resp.status);
+          setLoading(false);
+          return;
+        }
         const data = await resp.json();
         if (!mounted) return;
         if (data && typeof data.score === "number") setScore(data.score);
       } catch (e) {
-        // ignore
-      } finally { setLoading(false); }
+        console.warn('Failed loading score', e);
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchRemoteUser();
