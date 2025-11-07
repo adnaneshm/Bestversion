@@ -98,7 +98,7 @@ export default function Compte() {
       cin: (displayUser as any)?.tutor?.cin || '',
       phone: (displayUser as any)?.tutor?.phone || '',
     });
-  }, [displayUser]);
+  }, [remoteUser?.id, user.external_code]);
 
   function computeAgeFromDob(dob?: string) {
     if (!dob) return undefined;
