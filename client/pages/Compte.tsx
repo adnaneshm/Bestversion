@@ -226,7 +226,7 @@ export default function Compte() {
                 <p className="text-sm text-slate-500 mt-3">ID</p>
                 <p className="font-medium">{displayUser.external_code || "—"}</p>
 
-                <p className="text-sm text-slate-500 mt-3">Rôle</p>
+                <p className="text-sm text-slate-500 mt-3">R��le</p>
                 <p className="font-medium">{displayUser.role || "—"}</p>
 
                 <p className="text-sm text-slate-500 mt-3">Niche</p>
@@ -290,7 +290,7 @@ export default function Compte() {
                     {!editingTutor ? (
                       <p className="font-medium">{((displayUser as any).tutor?.phone) || '—'}</p>
                     ) : (
-                      <input value={tutorForm.phone} onChange={(e) => setTutorForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
+                      <input type="tel" inputMode="numeric" pattern="[0-9]*" value={tutorForm.phone} onChange={(e) => setTutorForm((s: any) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-md border border-slate-200 bg-white px-3 outline-none" />
                     )}
                   </div>
                 </div>
