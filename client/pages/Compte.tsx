@@ -136,7 +136,9 @@ export default function Compte() {
         return;
       }
 
-      const resp = await fetch('/api/user', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+      const url = `${base.replace(/\/$/, '')}/api/user`;
+      const resp = await fetch(url, { method: 'PATCH', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!resp.ok) {
         const txt = await resp.text().catch(() => '');
         console.warn('Save basic failed response', resp.status, txt);
@@ -169,7 +171,9 @@ export default function Compte() {
       }
 
       const payload = { id, tutor: tutorPayload };
-      const resp = await fetch('/api/user', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const base = (import.meta as any).env?.VITE_API_BASE || window.location.origin;
+      const url = `${base.replace(/\/$/, '')}/api/user`;
+      const resp = await fetch(url, { method: 'PATCH', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!resp.ok) {
         const txt = await resp.text().catch(() => '');
         console.warn('Save tutor failed response', resp.status, txt);
