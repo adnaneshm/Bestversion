@@ -118,9 +118,30 @@ export default function Compte() {
 
   async function saveBasic() {
     try {
-      const payload = { id: displayUser.external_code || (displayUser as any).id, ...form };
+      const id = displayUser.external_code || (displayUser as any).id;
+      const payload: Record<string, any> = { id };
+      // only include fields that changed and are non-empty (avoid sending columns that may not exist)
+      const candidateFields = ['prenom','nom','dob','phone','cin'];
+      for (const k of candidateFields) {
+        const newVal = (form as any)[k];
+        const oldVal = (displayUser as any)[k] ?? '';
+        if (typeof newVal !== 'undefined' && newVal !== '' && String(newVal) !== String(oldVal)) {
+          payload[k] = newVal;
+        }
+      }
+
+      // nothing to update
+      if (Object.keys(payload).length <= 1) {
+        setEditingBasic(false);
+        return;
+      }
+
       const resp = await fetch('/api/user', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!resp.ok) throw new Error('Failed to save');
+      if (!resp.ok) {
+        const txt = await resp.text().catch(() => '');
+        console.warn('Save basic failed response', resp.status, txt);
+        throw new Error('Failed to save');
+      }
       const json = await resp.json();
       // update local storage and state
       try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
