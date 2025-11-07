@@ -165,6 +165,24 @@ export const handleUpdateUser: RequestHandler = async (req, res) => {
       }
 
       const updated = await resp.json();
+      // After patch, try to retrieve full user record to ensure we return all fields (including role/niche)
+      try {
+        const getUrlA = `${supabaseUrl}/rest/v1/app_users?id=eq.${encodeURIComponent(id)}&select=*`;
+        const getUrlB = `${supabaseUrl}/rest/v1/users?id=eq.${encodeURIComponent(id)}&select=*`;
+        let getResp = await fetch(getUrlA, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+        if (!getResp.ok) {
+          getResp = await fetch(getUrlB, { headers: { apikey: serviceRole, Authorization: `Bearer ${serviceRole}` } });
+        }
+        if (getResp.ok) {
+          const users = await getResp.json();
+          const fullUser = Array.isArray(users) ? users[0] : users;
+          return res.json({ user: fullUser });
+        }
+      } catch (e) {
+        // ignore and fallback to returning updated
+        console.warn('Failed to fetch full user after update', e);
+      }
+
       return res.json({ user: Array.isArray(updated) ? updated[0] : updated });
     } catch (err: any) {
       console.error('updateUser network error', err);
