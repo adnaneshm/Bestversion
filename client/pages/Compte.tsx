@@ -190,7 +190,15 @@ export default function Compte() {
       const json = await resp.json();
       try { localStorage.setItem('shm_user', JSON.stringify(json.user)); } catch (e) {}
       setEditingTutor(false);
-      setRemoteUser(json.user || remoteUser);
+      const newUser = json.user || remoteUser;
+      setRemoteUser(newUser);
+      setTutorForm({
+        prenom: newUser?.tutor?.prenom || '',
+        nom: newUser?.tutor?.nom || '',
+        type: newUser?.tutor?.type || '',
+        cin: newUser?.tutor?.cin || '',
+        phone: newUser?.tutor?.phone || '',
+      });
     } catch (e: any) {
       console.warn('Save tutor failed', e);
       alert('Échec de l’enregistrement du tuteur');
